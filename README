@@ -1,1 +1,90 @@
-LESMEG.txt
+URL: http://stud.aitel.hist.no/~oivindoh/prosjekt/
+111% anonym!
+
+	(for "cat /etc/passwd | grep oivindoh" oppgir ikke navnet mitt i det hele tatt :-)
+	
+	
+
+FUNKSJONALITET:
+	HTML5/CSS3-in-spirit. Null javaoppgulp. Null flashfjas.
+	
+	(XTRA) Rediger blogg ved å oppgi referansenummer angitt ved registrering
+			Referansenummer er md5-hash av url, forfatter (de to obligatoriske feltene) og salt (fra config-fil)
+	(XTRA) Rediger blogg ved å være innlogget som lærer og liste ut blogger for et fag
+	
+	Listing av blogger tilhørende et fag
+	
+	Eksportering av bloggliste til OPML-format
+	
+	Registrering av ny blogg ved hjelp av link med 32bokstavs fagID
+	(XTRA) Registrerer ikke samme blogg-url med samme forfatter to ganger
+			lar dog ikke studenter endre allerede eksisterende link herfra
+			siden dette ville avsløre redigerings-linken om man har riktig navn og adresse
+	(XTRA) Sjekking av link-url, både hos klient (html5) og på server før registrering.
+	
+	Innlogging for lærer
+	(XTRA) Lærer kan hente ut samtlige fag (og tilhørende linker) registrert på seg selv, uavhengig av semester
+	
+	(XTRA) Klikkteller per blogglink
+			går via filen go.php, som oppdaterer clicks-feltet i db
+			videresender ved hjelp av header(location);
+	(XTRA) Valg av hvilke felt som skal vises i blogglisting (via GET)
+			viser alle felt om ingen valg er gjort
+			viser alle felt om alle blir valgt bort
+			viser alltid url direkte eller indirekte gjennom tittel-link
+	
+TODO:
+	Lærer oppdaterer passord/navn/epost
+		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
+	
+	Funksjonalitet for å få resatt passord
+	
+	Gjøre om XML-funksjonaliteten:
+		gi ompl.php fagID via GET, og listen skal skrives ut.
+		
+	Fiks håndtering av duplicate-url
+		Godta samme url om fagID er ulik
+		Har det noe å si o
+		
+	Sletting av fag
+		Husk å slette linker tilhørende faget
+		
+	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
+	
+	Bruk try/catch på databasefunksjonalitet
+	
+	Lag installerscript for å:
+		- sette opp conf.php
+		- opprette databasen
+			
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
+	
+	
+	
+	
+	
+	Alle funksjoner skal ha følgende kommentar før
+#
+# 	login(): Innlogging, verifisering av bruker
+#		parameter: username, password
+#		return: 1 (logged in) | 2 (wrong passord) | 0 (user not found)
+#
