@@ -7,13 +7,12 @@ if (!$_GET['setup']){
 	# komme med output, isåfall skal dette inn i $message)
 	
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
-	if(file_exists('conf.php')){
 	require_once("conf.php");
 	require_once("include/escape.php");
 	require_once("include/login.php");
 	require_once("include/url.php");
 	require_once("include/subject.php");
-	}
+
 	# opprett objekter og message-variabel
 	$c = new Config();
 	$l = new LoginHandler(&$c);
