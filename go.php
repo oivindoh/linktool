@@ -2,7 +2,7 @@
 # Setup
 require_once('conf.php');
 $c = new Config();
-$to = $c->esc(htmlentities($_GET['to']));
+$to = str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), htmlentities($_GET['to']));
 
 # Finn url i DB
 $SQL = "SELECT * FROM links WHERE url='$to'";

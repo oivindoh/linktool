@@ -1,16 +1,19 @@
 <?php
+if (!file_exists('conf.php')){ $_GET['setup'] = 1; }
+if (!$_GET['setup']){
 	ob_start(); 
 	# buffer for setcookie - skal være overflødig nå, men behold til alt er gjennomgått
 	# for for tidlig output (ingen av funksjonene som kalles før <doctype> skal 
 	# komme med output, isåfall skal dette inn i $message)
 	
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
+	if(file_exists('conf.php')){
 	require_once("conf.php");
 	require_once("include/escape.php");
 	require_once("include/login.php");
 	require_once("include/url.php");
 	require_once("include/subject.php");
-	
+	}
 	# opprett objekter og message-variabel
 	$c = new Config();
 	$l = new LoginHandler(&$c);
@@ -81,6 +84,7 @@
 	}
 	
 	ob_end_flush();
+}
 ?>
 <!DOCTYPE HTML>
 <html lang="no">
@@ -94,6 +98,7 @@
 		<header id="header">
 			<nav id="navigasjon">            
 				<?php
+				if(!$_GET['setup']){
 				#
 				# innloggingsskjema, registreringsskjema og innlogget bruker-info
 				#
@@ -109,12 +114,15 @@
 						# bruker er innlogget; vis relevant info
 						echo $l->showInfo();
 					}
+				}
 				?>
 				<ul>
+					<?php if(!$_GET['setup']) { ?>
 					<li><a href="index.php">hjem</a></li>
 					<li><a href="?action=newsubject">nytt fag</a></li>
 					<li><a href="?action=newblog">ny blogg</a></li>
 					<li><a href="?action=editblog">rediger blogg</a></li>
+					<?php } ?>
 				</ul>
 			</nav>
 		</header>
@@ -128,6 +136,7 @@
 			<article id="innhold_tekst">
 
 <?php
+if (!$_GET['setup']){
 #
 #	Håndter link-handlinger ($_GET[action])
 #
@@ -193,6 +202,11 @@ switch ($_GET['action']){
 		fallbacks på plass for eldre nettlesere (som firefox 3.6), så dette er absolutt ikke 
 		et krav.</small></p>";
 	break;
+}
+}
+# Hvis Setupscriptet skal kjøre
+else {
+	include('setup.php');
 }
 ?>
 			</article>

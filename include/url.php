@@ -104,7 +104,7 @@ class URLHandler{
 	}
 	
 	public function deleteURL($id){
-		$id = $this->c->esc($id);
+		$id = $this->esc($id);
 		
 		# Sjekk om URL tilhører bruker (via fag)
 		$SQL = "SELECT * FROM subjectlinks INNER JOIN subjects ON subjects.unique = subjectlinks.subjects_unique WHERE links_ref = '$id'";

@@ -33,6 +33,10 @@ FUNKSJONALITET:
 			viser alle felt om alle blir valgt bort
 			viser alltid url direkte eller indirekte gjennom tittel-link
 	
+	Setupscript som lagrer databaseinformasjon og lignende ved førstegangs kjøring
+		kan også nås senere ved å legge til ?setup=1 i url. Da kan man - om man har 
+		administratorpassordet som ble satt ved første gangs kjøring - endre innstillingene.
+	
 TODO:
 	Lærer oppdaterer passord/navn/epost
 		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
@@ -53,9 +57,9 @@ TODO:
 	
 	Bruk try/catch på databasefunksjonalitet
 	
-	Lag installerscript for å:
-		- sette opp conf.php
-		- opprette databasen
+	La setupscript opprette databasen/tabellene også.
+		
+	Skill ut html/css i templates som kan inkluderes
 			
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
