@@ -2,5 +2,5 @@
 git add *
 echo LESMEG.txt > README
 read comment
-git commit -m "\'$comment\'"
+git commit -m "$comment"
 git push origin master
