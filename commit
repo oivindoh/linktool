@@ -9,4 +9,4 @@ git push origin master
 cp -R * /Users/howl/www/prosjekt/
 # backup opprettet
 # sender ny versjon til gremlin
-ssh -r * oivindoh@gremlin.stud.aitel.hist.no:/home/stud/oivindoh/public_html/prosjekt/
+scp -r * oivindoh@gremlin.stud.aitel.hist.no:/home/stud/oivindoh/public_html/prosjekt/
