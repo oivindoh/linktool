@@ -1,0 +1,215 @@
+<?php
+class SubjectHandler{
+	private $c;
+	private $l;
+	
+	public function SubjectHandler(&$config, &$login){
+		$this->c = &$config;
+		$this->l = &$login;
+	}
+	public function addSubject($code, $term, $name){
+		if(!$name || $name == ""){
+			return 0;
+		}
+		$user = $this->l->getUserName();
+		
+		if($user == ""){
+			#ikke innlogget
+			return 0;
+		}
+		$unique = $this->generateKey($name);
+		$term = $this->esc($term);
+		$code = $this->esc($code);
+		$name = $this->esc($name);
+		$SQL = "INSERT INTO subjects VALUES('$unique','$code','$term','$name','$user')";
+		$result = $this->runSQL($SQL); # true/false for INSERT
+		if ($result){
+			return 1;
+		}
+		return 0;
+	}
+	
+	public function showAddSubjectForm(){
+		$html = <<<HTML
+		<h1>Registrer nytt fag</h1>
+		<p>Her kan du registrere et nytt fag, der du blir stående som eneste person med full oversikt og mulighet til å 
+			slette/endre linker uten å måtte huske på referansenummer i hvert enkelt tilfelle.</p>
+		<form action="?" method="post">
+			<fieldset><legend>Faginformasjon</legend>
+				<input type="hidden" name="faction" value="addsubject">
+				
+				<label><input class="short" type="text" name="name" required placeholder="PHP - Introduksjonskurs"/> Navn</label><br />
+				<label><input class="short" type="text" name="term" /> Semester</label><br />
+				<label><input class="short" type="text" name="code" placeholder="PHP101"/> Fagkode</label>
+			</fieldset>
+			<div>
+			<button type="submit">Registrer fag</button>
+			<button type="reset">Begynn på nytt</button>
+			</div>
+		</form>
+HTML;
+		echo $html;
+				
+	}
+	
+	public function removeSubject(){
+		# komplisert, ta som ekstra
+	}
+	
+	public function listBlogs($id, $opml = no){
+		$id = $this->esc($id);
+		$db = $this->c->db_name;
+		if ($this->l->getUserName() != ""){
+			$helpertext = '<p>Du kan trygt gi lenken til denne siden til studenter: 
+							de vil ikke få mulighet til å slette eller endre oppføringer med 
+							mindre de har referansenummer til den enkelte oppføring.</p>';
+		}
+				
+		# Vis valg av felt
+		# Sørg for at valgte felt allerede er krysset av.
+		# løses ved å sette variabler med samme navn som boksen til checked
+		foreach ($_GET['show'] as $key => $valuechecked){
+			$$valuechecked = "checked";
+		}
+		# Kryss av alle felt om ingenting annet er oppgitt
+		!$_GET['show'] ? $url = $rss = $author = $description = $frequency = $clicks = $title = "checked" : false ;
+		
+		# Sett opp skjema for valg av felt
+		$form_selection = <<<HTML
+		<form method="get"><fieldset><legend>Visningsvalg</legend>
+			<input type="hidden" name="id" value="$id" />
+			<input type="hidden" name="action" value="listblogs" />
+			<label><input type="checkbox" name="show[]" value="url" $url /> url &nbsp;</label> 
+			<label><input type="checkbox" name="show[]" value="rss" $rss /> rss &nbsp;</label> 
+			<label><input type="checkbox" name="show[]" value="author" $author /> forfatter &nbsp;</label> 
+			<label><input type="checkbox" name="show[]" value="description" $description /> beskrivelse &nbsp;</label> 
+			<label><input type="checkbox" name="show[]" value="frequency" $frequency /> oppdateringer &nbsp;</label>
+			<label><input type="checkbox" name="show[]" value="clicks" $clicks /> klikk &nbsp;</label>
+			<button type="submit">Vis</button>
+			</fieldset>
+		</form>
+HTML;
+		# Inner Join Is The Enemy
+		$SQL = "SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
+		INNER JOIN $db.subjectlinks ON
+		$db.subjectlinks.links_ref = $db.links.ref
+		INNER JOIN $db.subjects ON
+		$db.subjects.unique = $db.subjectlinks.subjects_unique
+		WHERE $db.subjectlinks.subjects_unique = '$id'";
+	
+		$result = $this->runSQL($SQL);
+		
+		# Hent første rad for å vise fagnavn over listen
+		$number_of_links = mysql_num_rows($result);								# Burde vel egentlig gjøres i sql
+		$first_row = mysql_fetch_assoc($result);
+		$out = '
+			<h1>Blogger for ' . $first_row['name'] . ' (' . $number_of_links . ')</h1>
+			'. $helpertext . $form_selection . '
+			<div id="linklist">';
+			
+		# Sett pointer tilbake til rad 0 før utlisting av blogger
+		mysql_data_seek($result, 0);
+		
+		# Opprett OMPL-skjema
+		$ompl_list = "";
+		while($result_array = mysql_fetch_assoc($result)){
+
+			# Vis RSS-link om feltet ikke er tomt og bruker har valgt å vise RSS
+			if($result_array['rss'] != "" && $rss){
+				$rss_link = '(<a href="'. $result_array['rss'] .'">RSS</a>)';
+				}
+				
+			# Sett slett/endre-linker til rss-link som standard, siden 
+			# brukere som ikke er innlogget ikke vil komme innom neste conditional
+			$delete_change_links = $rss_link;
+			
+			if ($this->l->getUserName() != ""){
+				# Vis linker til slett og endre om bruker er innlogget
+				$delete_change_links = '(<a href="?action=deleteblog&id='. $result_array['ref'] 
+				.'">Slett</a>) (<a href="?action=editblog&id='. $result_array['ref'] .'">Endre</a>) '. $rss_link;
+			}
+			
+			# Bruk tittel som linknavn om denne er hentet fram
+			$result_array['title'] != "" || $result_array['title'] != null
+				? $url_link_text = $result_array['title'] 
+				: $url_link_text = $result_array['url'];
+				
+			$out .= '
+			<ul>
+				<li>
+					<h3><a href="go.php?to='. $result_array['url'] . '">'. $url_link_text 
+					.'</a></h3><span class="linklist_delete_edit_links">'. $delete_change_links .'</span></li>';
+			
+			$description ? $out .= '<li><blockquote>' . $result_array['description'] . '</blockquote></li>' : $out = $out;
+			$url ? $out .= '<li>URL: ' . $result_array['url'] . '</li>' : $out = $out;
+			$author ? $out .= '<li>Forfatter: ' . $result_array['author'] . '</li>' : $out = $out;
+			
+			switch($result_array['frequency']){
+				case 0: $frequency_text = "Daglig";break;
+				case 1: $frequency_text = "Ukentlig";break;
+				case 2: $frequency_text = "Månedlig"; break;
+				case 3: $frequency_text = "Intet mønster"; break;
+			}
+			
+			$frequency ? $out .= '<li>Oppdateringsfrekvens: ' . $frequency_text . '</li>' : $out = $out;
+			$clicks ? $out .= '<li>Antall visninger: ' . $result_array['clicks'] . '</li>' : $out = $out;
+			$out .= '</ul>';			
+		}
+		
+		$opml_form = <<<HTML
+		<form action="opml.php" method="get">
+			<input type="hidden" name="id" value="$id" />
+			<button type="submit">Hent OPML</button>
+		</form>
+HTML;
+		echo $out . '</div><div id="opml-form">' . $opml_form .'</div>';
+	}
+	public function listByUser($user){
+		$user = $this->esc($user);
+		$SQL = "SELECT * FROM subjects WHERE users_email='$user'";
+		$result = $this->runSQL($SQL);
+		$out = '<div id="subjects_overview">';
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			$out .= <<<HTML
+			<details><summary>$row[name]</summary>
+			<div class="subjects_single_container">
+			<ul>
+			<li title="Fagkode">$row[code]</li>
+			<li title="Semester">$row[term]</li>
+			<li title="Unik link"><a href="?action=newblog&id=$row[unique]">studentlink</a></li>
+			<li title="Liste over tilknyttede blogger"><a href="?action=listblogs&id=$row[unique]">vis/rediger blogger</a></li>
+			<li class="delete" title="Slett"><a href="?action=deletesubject&id=$row[unique]">slett</a></li>
+			</ul>
+			</div>
+			</details>
+HTML;
+		}
+		$out .= '</div>';
+		return $out;
+		
+	
+	}
+	# Her genereres nøkkelen som deles ut til studenter
+	# Dette er også PK i fagtabellen
+	public function generateKey($navn){
+		$key = $navn . $this->c->salt;
+		return md5($key);
+	}
+	
+	public function esc($string){
+		return str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $string); 
+	}
+	
+	public function runSQL($SQL){
+		try{
+			mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
+			@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
+			$return = mysql_query($SQL);
+			mysql_close();
+		} catch(Exception $e){
+			echo 'Feil: ' . $e->getMessage();
+		}
+		return $return;
+	}
+}
+?>
