@@ -53,6 +53,9 @@ HTML;
 	}
 	
 	public function removeSubject($id, $confirm = false){
+		if($this->l->getUserName() == ""){
+			return 0;
+		}
 		$id = $this->esc($id);
 		if ($confirm){
 			# Nødvendig SQL
@@ -126,8 +129,10 @@ HTML;
 		# Vis valg av felt
 		# Sørg for at valgte felt allerede er krysset av.
 		# løses ved å sette variabler med samme navn som boksen til checked
-		foreach ($_GET['show'] as $key => $valuechecked){
-			$$valuechecked = "checked";
+		if (isset($_GET['show'])){
+			foreach ($_GET['show'] as $key => $valuechecked){
+				$$valuechecked = "checked";
+			}
 		}
 		# Kryss av alle felt om ingenting annet er oppgitt
 		!$_GET['show'] ? $url = $rss = $author = $description = $frequency = $clicks = $title = "checked" : false ;

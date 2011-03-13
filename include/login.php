@@ -120,8 +120,8 @@ class LoginHandler {
 		<div id="login">
 		<form method="post" action="?">
 			<input type="hidden" name="faction" value="login"/>
-			<input type="email" name="username" placeholder="epost@hist.no" required />
-			<input type="password" name="password" placeholder="passord" required />
+			<input class="short" type="email" name="username" placeholder="epost@hist.no" required />
+			<input class="short" type="password" name="password" placeholder="passord" required />
 			<button type="submit">logg inn</button>
 			<a href="?newuser=1"> Ny bruker?</a>
 		</form>
@@ -141,8 +141,8 @@ HTML;
 			<h3>Registrer ny bruker</h3>
 		<form method="post" action="?">
 			<input type="hidden" name="faction" value="register"/>
-			<input type="email" name="username" placeholder="epost@hist.no" required />
-			<input type="password" name="password" placeholder="passord" required/>
+			<input class="short" type="email" name="username" placeholder="epost@hist.no" required />
+			<input class="short" type="password" name="password" placeholder="passord" required/>
 			<button type="submit">Registrer</button>
 		</form>
 		<p>Oppgi gjerne en gyldig epostadresse, slik at du har<br /> mulighet til å
@@ -152,15 +152,18 @@ HTML;
 		return $registerform;
 	}
 	
-	public function updateAccount($user, $pass = false, $pass2 = false, $name){
+	public function updateAccount($user, $pass1 = false, $pass2 = false, $name){
 		if ($pass1 && $pass2){
+			# Passord skal endres
 			if ($pass1 === $pass2){
 				return "likt";
 			}
 			else {
-				return "ulikt";
+				# ulikt passord, men to passord registrert
+				return 2; 
 			}
 		}
+		
 		return "amagad";
 	}
 	

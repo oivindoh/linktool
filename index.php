@@ -1,4 +1,6 @@
 <?php
+error_reporting (E_ALL ^ E_NOTICE);
+
 if (!file_exists('conf.php')){ $_GET['setup'] = 1; }
 if (!isset($_GET['setup'])){
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
@@ -75,7 +77,13 @@ if (!isset($_GET['setup'])){
 			if ($editblog == 1){ $message = "<h1>Blogg oppdatert</h1></p>Takk for bidraget!</p>"; } else { $message = "<h1>Blogg ikke oppdatert</h1><p>Dette er garantert din egen feil.</p>"; }
 			break;
 		case "accountupdate":
-			$message = $l->updateAccount($_POST['email'], $_POST['pass1'], $_POST['pass2'], $_POST['name']);
+			$accountupdate_result = $l->updateAccount($_POST['email'], $_POST['pass1'], $_POST['pass2'], $_POST['name']);
+
+			switch($accountupdate_result){
+				case 2:
+					$message = '<h1>Oppdatering av konto</h1><p>Du ser ut til å ville endre passord, men du oppga ikke identisk passord to ganger; dette er 
+				nødvendig for å unngå å lagre passord med skrivefeil. Prøv gjerne igjen!</p>';
+			}
 			break;
 		}
 	}
@@ -171,12 +179,6 @@ switch ($_GET['action']){
 				echo '<h1>Fag slettet</h1><p>Blogger tilknyttet faget ble også slettet.</p>';
 				break;
 		}
-		echo "I IZ ERAZIN UR HARDDRIVE MON OLOL ASDASD (NYI)";
-		# method: delete all in subjectlinks
-		#	then delete all entries in links
-		#	theeeeen delete the actual subject
-		#	also: request confirmation sinz diz is impossabal 2 andu
-		# 			;-)
 	break;
 	case "listblogs":
 		if (isset($_GET['id'])){

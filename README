@@ -37,6 +37,9 @@ FUNKSJONALITET:
 		kan også nås senere ved å legge til ?setup=1 i url. Da kan man - om man har 
 		administratorpassordet som ble satt ved første gangs kjøring - endre innstillingene.
 	
+	Sletting av fag
+		- Sletter også alle tilhørende linker
+	
 TODO:
 	Lærer oppdaterer passord/navn/epost
 		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
@@ -54,9 +57,6 @@ TODO:
 	Fiks håndtering av duplicate-url
 		Godta samme url om fagID er ulik
 		Har det noe å si o
-		
-	Sletting av fag
-		Husk å slette linker tilhørende faget
 		
 	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
 	
