@@ -3,7 +3,6 @@ if (!file_exists('conf.php')){ $_GET['setup'] = 1; }
 if (!$_GET['setup']){
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
 	require_once("conf.php");
-	require_once("include/escape.php");
 	require_once("include/login.php");
 	require_once("include/url.php");
 	require_once("include/subject.php");
