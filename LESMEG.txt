@@ -65,6 +65,9 @@ TODO:
 	La setupscript opprette databasen/tabellene også.
 		
 	# Skill ut html/css i templates som kan inkluderes ---- vil nok ikke gjøres nå som setup er bakt inn
+	
+	FIKS SETUP
+	kan gå videre uten å faktisk skrive inn adminpass
 				
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING

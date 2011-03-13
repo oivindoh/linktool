@@ -64,10 +64,12 @@ PHP;
 			
 			#echo $config;
 			$writeconfig = file_put_contents('conf.php', $config);
+			echo 'writeconfig: ' . $writeconfig;
 		break;
 		default:
 		# Første steg, skaff databaseopplysningene
 		$md5time = md5(time());
+		if(isset($_POST['masterpass'])){ $followthrough = '<input type="hidden" name="masterpass" value="' . $_POST['masterpass'] . '" />'; }
 		$setup_form = <<<HTML
 		<h1>Oppsett av linktool</h1>
 		<p>Dette verktøyet gjør bruk av en mysql-database, og du må derfor oppgi den informasjonen verktøyet trenger for å kjøre
@@ -76,6 +78,7 @@ PHP;
 			<form method="post" action="?setup=1">
 				<fieldset><legend>Databaseoppsett</legend>
 					<input type="hidden" name="setup" value="1" />
+					$followthrough
 					<legend><input type="text" name="db_host" placeholder="db.stud.aitel.hist.no" required /> Server</legend>
 					<legend><input type="text" name="db_user" placeholder="root" required /> Brukernavn</legend>
 					<legend><input type="text" name="db_pass" placeholder="passord" required /> Passord</legend>
