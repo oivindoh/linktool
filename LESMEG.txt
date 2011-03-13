@@ -41,6 +41,11 @@ TODO:
 	Lærer oppdaterer passord/navn/epost
 		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
 	
+	Semester
+		- La velge dato
+		- Lagre som unixtid i db
+		- måned 01-06....blabla
+	
 	Funksjonalitet for å få resatt passord
 	
 	Gjøre om XML-funksjonaliteten:

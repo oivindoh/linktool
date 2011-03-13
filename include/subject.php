@@ -52,8 +52,66 @@ HTML;
 				
 	}
 	
-	public function removeSubject(){
-		# komplisert, ta som ekstra
+	public function removeSubject($id, $confirm = false){
+		$id = $this->esc($id);
+		if ($confirm){
+			# Nødvendig SQL
+			$SQL = "DELETE FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '$id'";
+			$SQL2 = "DELETE FROM `subjects` WHERE `unique` = '$id'";
+			
+			# Finn ut hvilke linker som også må bort
+			$array_of_links_to_delete = Array();
+			$SQL3 = "SELECT * FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '$id'";
+			$result = $this->runSQL($SQL3);
+			if ($result){
+				$i = 0;
+				while($result_row = mysql_fetch_assoc($result)){
+					$array_of_links_to_delete[$i] = $result_row['links_ref'];
+					$i++;
+				}
+				$deletelinks = true;
+			}
+			else{
+				$deletelinks = false;
+			}
+			
+			$result = $this->runSQL($SQL);
+			if($result){
+				if($deletelinks){
+					# ingen grunn til at dette skulle feile....
+					foreach($array_of_links_to_delete as $key => $delete_target){
+						$SQL3 = "DELETE FROM `links` WHERE `ref`='$delete_target'";
+						$result = $this->runSQL($SQL3);
+					}
+				}
+				$result = $this->runSQL($SQL2);
+				if ($result){
+					# Alt ok!
+					return 2;
+				}
+			}
+			# Meh, feil!
+			return 1;
+		}
+		# ikke bekreftet
+		$SQL = "SELECT * FROM subjects WHERE `unique`='$id'";
+		$result = $this->runSQL($SQL);
+		if($result){
+			$result = mysql_fetch_assoc($result);
+			$html = <<<HTML
+			<h1>Bekreft sletting av faget $result[name]</h1>
+			<p>Det er <strong>ikke</strong> mulig å angre dette valget, og samtlige blogger 
+				tilknyttet faget vil også bli fjernet fra systemet</p>
+			<form>
+				<input type="hidden" name="id" value="$id" />
+				<input type="hidden" name="action" value="deletesubject" />
+				<input type="hidden" name="confirm" value="1" />
+				<button type="submit">Bekreft</button>
+			</form>
+HTML;
+		return $html;
+		}
+		return 0;
 	}
 	
 	public function listBlogs($id, $opml = no){
@@ -158,8 +216,10 @@ HTML;
 		
 		$opml_form = <<<HTML
 		<form action="opml.php" method="get">
+			<fieldset><legend>Aggregering</legend>
 			<input type="hidden" name="id" value="$id" />
 			<button type="submit">Hent OPML</button>
+			</fieldset>
 		</form>
 HTML;
 		echo $out . '</div><div id="opml-form">' . $opml_form .'</div>';

@@ -152,6 +152,19 @@ HTML;
 		return $registerform;
 	}
 	
+	public function updateAccount($user, $pass = false, $pass2 = false, $name){
+		if ($pass1 && $pass2){
+			if ($pass1 === $pass2){
+				return "likt";
+			}
+			else {
+				return "ulikt";
+			}
+		}
+		return "amagad";
+	}
+	
+	
 	#
 	# 	showInfo(): Vis relevant info for innlogget bruker
 	#		parameter: 
@@ -161,14 +174,16 @@ HTML;
 		if($more){
 			$info = <<<HTML
 			<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon<br/></p>
-			<form method="post">
+			<form method="post" action="?">
 				<fieldset><legend>Personalia</legend>
-					<label><input type="email" class="short" name="mail" value="" required /> Epost</label><br />
+					<input type="hidden" name="faction" value="accountupdate"/>
+					<label><input type="email" class="short" name="email" value="" required /> Epost</label><br />
 					<label><input type="text" class="short" name="name" /> Navn</label>
 					<details><summary>Endre passord</summary>
-					<label><input type="password" class="short" name="password1" value="" /> Passord</label>
-					<label><input type="password" class="short" name="password2" value="" /> Gjenta passord</label>
+					<label><input type="password" class="short" name="pass1" value="" /> Passord</label>
+					<label><input type="password" class="short" name="pass2" value="" /> Gjenta passord</label>
 					</details>
+					<button type="submit">Endre</button><button type="reset">Tilbakestill</button>
 				</fieldset>
 			</form>
 HTML;

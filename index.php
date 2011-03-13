@@ -1,6 +1,6 @@
 <?php
 if (!file_exists('conf.php')){ $_GET['setup'] = 1; }
-if (!$_GET['setup']){
+if (!isset($_GET['setup'])){
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
 	require_once("conf.php");
 	require_once("include/login.php");
@@ -15,13 +15,14 @@ if (!$_GET['setup']){
 	
 	# cookielogin (endelig, usynlig BOM character ødela...)
 	# husk sed -i '1 s/^\xef\xbb\xbf//' *.txt og tail -c +4 filmedBOM > filutenBOM
-	if ($_COOKIE['userName'] && $_COOKIE['passHash']){
+	if (isset($_COOKIE['userName']) && isset($_COOKIE['passHash'])){
 		$l->login($_COOKIE['userName'], md5($_COOKIE['passHash']));
 	}
 	
 	#
 	#	Håndter innsendte form-handlinger ($_POST[faction])
 	#
+	if(isset($_POST['faction'])){
 	switch($_POST['faction']){
 		# Bruker har sendt inn data for registrering av ny bruker
 		case "register":
@@ -73,6 +74,10 @@ if (!$_GET['setup']){
 			$editblog = $u->editURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
 			if ($editblog == 1){ $message = "<h1>Blogg oppdatert</h1></p>Takk for bidraget!</p>"; } else { $message = "<h1>Blogg ikke oppdatert</h1><p>Dette er garantert din egen feil.</p>"; }
 			break;
+		case "accountupdate":
+			$message = $l->updateAccount($_POST['email'], $_POST['pass1'], $_POST['pass2'], $_POST['name']);
+			break;
+		}
 	}
 }
 ?>
@@ -89,11 +94,11 @@ if (!$_GET['setup']){
 		<header id="header">
 			<nav id="navigasjon">            
 				<?php
-				if(!$_GET['setup']){
+				if(!isset($_GET['setup'])){
 				#
 				# innloggingsskjema, registreringsskjema og innlogget bruker-info
 				#
-				if ($l->getUserName() == "" && $_GET['newuser'] != 1){
+				if ($l->getUserName() == "" && !isset($_GET['newuser'])){
 					# ikke innlogget; vis skjema
 					echo $l->showLoginForm();
 					}
@@ -108,7 +113,7 @@ if (!$_GET['setup']){
 				}
 				?>
 				<ul>
-					<?php if(!$_GET['setup']) { ?>
+					<?php if(!isset($_GET['setup'])) { ?>
 					<li><a href="index.php">hjem</a></li>
 					<li><a href="?action=newsubject">nytt fag</a></li>
 					<li><a href="?action=newblog">ny blogg</a></li>
@@ -121,16 +126,17 @@ if (!$_GET['setup']){
 		<section id="innhold">
 			<header id="innhold_header">
 					
-					<?php echo $message; ?>
+					<?php if(isset($message)){ echo $message; }?>
 					
 			</header>
 			<article id="innhold_tekst">
 
 <?php
-if (!$_GET['setup']){
+if (!isset($_GET['setup'])){
 #
 #	Håndter link-handlinger ($_GET[action])
 #
+
 switch ($_GET['action']){
 	case "account":
 		echo $l->showInfo(true);
@@ -149,6 +155,22 @@ switch ($_GET['action']){
 	break;
 	
 	case "deletesubject":
+		if (!isset($_GET['confirm'])){
+			echo $s->removeSubject($_GET['id']);
+			break;
+			}
+		$deletesubjectreturn = $s->removeSubject($_GET['id'], $_GET['confirm']);
+		switch($deletesubjectreturn){
+			case 0:
+				echo '<h1>Feil</h1><p>Det er et under at denne siden i det hele tatt vises.</p>';
+				break;
+			case 1:
+				echo '<h1>Feil</h1><p>Kunne ikke slette rad fra database.</p>';
+				break;
+			case 2:
+				echo '<h1>Fag slettet</h1><p>Blogger tilknyttet faget ble også slettet.</p>';
+				break;
+		}
 		echo "I IZ ERAZIN UR HARDDRIVE MON OLOL ASDASD (NYI)";
 		# method: delete all in subjectlinks
 		#	then delete all entries in links
