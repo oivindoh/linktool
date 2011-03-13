@@ -157,7 +157,23 @@ HTML;
 	#		parameter: 
 	#		return: string (html: info)
 	#
-	public function showInfo(){
+	public function showInfo($more = false){
+		if($more){
+			$info = <<<HTML
+			<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon<br/></p>
+			<form method="post">
+				<fieldset><legend>Personalia</legend>
+					<label><input type="email" class="short" name="mail" value="" required /> Epost</label><br />
+					<label><input type="text" class="short" name="name" /> Navn</label>
+					<details><summary>Endre passord</summary>
+					<label><input type="password" class="short" name="password1" value="" /> Passord</label>
+					<label><input type="password" class="short" name="password2" value="" /> Gjenta passord</label>
+					</details>
+				</fieldset>
+			</form>
+HTML;
+			return $info;
+		}
 		$info = <<<HTML
 		<div id="login">
 		<form method="post" action="?">
@@ -169,6 +185,7 @@ HTML;
 HTML;
 		return $info;
 	}
+	
 	
 	#
 	# Getters/Setters for user/pass
@@ -219,10 +236,14 @@ HTML;
 	#		return: resultat av spørring som ressurs
 	#
 	public function runSQL($SQL){
-		mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
-		@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
-		$return = mysql_query($SQL);
-		mysql_close();
+		try{
+			mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
+			@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
+			$return = mysql_query($SQL);
+			mysql_close();
+		} catch(Exception $e){
+			echo 'Feil: ' . $e->getMessage();
+		}
 		return $return;
 	}
 }	

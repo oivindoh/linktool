@@ -186,6 +186,8 @@ HTML;
 	public function showURLForm($id){
 		$urlmatch = 'pattern="https?://.+"';
 		if (empty($id) || strlen($id) != 32){
+			# Hvis ID ikke er oppgitt eller feil lengde og bruker ikke er innlogget, spør etter ID.
+			if($this->l->getUserName() == ""){
 			$form_id = <<<HTML
 			<fieldset><legend>Fagreferanse</legend>
 				<p>Har du ikke en fagreferanse (lang remse bokstaver og tall), kan du sjekke it'sLearning eller kontakte din faglærer for å få oppgitt denne. Uten fagreferanse kan du dessverre ikke legge til din blogg.</p>
@@ -193,6 +195,27 @@ HTML;
 				<label><input class="long" type="text" name="manual_id" maxlength="32" required pattern="^[0-9a-f]{32}$" title="Sørg for at du kopierer inn referansen eksakt"/></label>
 			</fieldset>
 HTML;
+			}
+			# Hvis bruker derimot er innlogget, vis heller en liste over brukerens fag; anta at han ikke vil
+			# legge inn i noen annens fag.
+			else{
+				$usernforsql = $this->l->getUserName();
+				$SQL = "SELECT * FROM subjects WHERE users_email='$usernforsql'";
+				$result = $this->runSQL($SQL);
+				while($result_array = mysql_fetch_assoc($result)){
+					$subjectoptions .= '<option value="' . $result_array['unique'] .'">' . $result_array['name'] . '</option>';
+				}
+				
+				$form_id = <<<HTML
+				<fieldset><legend>Fag</legend>
+					<p>En blogg må være tilknyttet et fag for å kunne registreres. Siden du er innlogget, vil du her få velge mellom dine fag, hvis du har noen registrert på deg. Vil du legge til en blogg i et fag registrert på en annen person, må du benytte link oppgitt av denne.</p>
+					<input type="hidden" name="faction" value="selectnewblog">
+					<select name="manual_id">
+						$subjectoptions
+					</select>
+				</fieldset>
+HTML;
+			}
 		}
 		$html = <<<HTML
 		<div id="form_description">
@@ -253,10 +276,14 @@ HTML;
 		return str_replace(array('--', ';', '\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('- -', '\;', '\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $string); 
 	}
 	public function runSQL($SQL){
-		$connection = mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
-		@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
-		$return = mysql_query($SQL);
-		mysql_close();
+		try{
+			mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
+			@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
+			$return = mysql_query($SQL);
+			mysql_close();
+		} catch(Exception $e){
+			echo 'Feil: ' . $e->getMessage();
+		}
 		return $return;
 	}
 }

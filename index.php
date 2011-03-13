@@ -1,11 +1,6 @@
 <?php
 if (!file_exists('conf.php')){ $_GET['setup'] = 1; }
 if (!$_GET['setup']){
-	ob_start(); 
-	# buffer for setcookie - skal være overflødig nå, men behold til alt er gjennomgått
-	# for for tidlig output (ingen av funksjonene som kalles før <doctype> skal 
-	# komme med output, isåfall skal dette inn i $message)
-	
 	# inkluder nødvendige filer, ikke fortsett uten samtlige
 	require_once("conf.php");
 	require_once("include/escape.php");
@@ -29,35 +24,34 @@ if (!$_GET['setup']){
 	#	Håndter innsendte form-handlinger ($_POST[faction])
 	#
 	switch($_POST['faction']){
+		# Bruker har sendt inn data for registrering av ny bruker
 		case "register":
-			# Bruker har sendt inn data for registrering.
 			$reg_result = $l->register($_POST['username'], $_POST['password']);
 			if ($reg_result === 1){
 				# om registreringen gikk bra, kan vi liksågodt logge inn
 				$l->login($_POST['username'], $_POST['password']);
 			}
 			break;
-			
+		# Bruker vil logge inn
 		case "login":
-			# Bruker har sendt inn data i innloggingsskjema
 			$result = $l->login($_POST['username'], $_POST['password']);
 			break;
-		
+		# Logg ut
 		case "logout":
 			$logout_status = $l->logout();
 			break;
-			
+		# Legge til nytt fag
 		case "addsubject":
 			$addsubject = $s->addSubject($_POST['code'], $_POST['term'], $_POST['name']);
 			$message = '<h1>Legg til fag</h1><span class="error">Fag finnes allerede i databasen';
 			if($addsubject == 1){ $message = '<h1>Legg til fag</h1><span class="success">Fag lagt til</span>'; }
 			break;
-		
+		# Bruker har oppgitt en fag-ID via skjema og vil legge til ny blogg
 		case "selectnewblog":
 			$_GET['id'] = $_POST['id'];
 			$message = "<h1>Legg til blogg</h1><p>Vennligst oppgi detaljer om din blogg</p>";
 			break;
-			
+		# Legg til blogg
 		case "addblog":
 			if($_POST['manual_id']){ $_POST['id'] = $_POST['manual_id']; }
 			$addblog = $u->insertURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
@@ -75,21 +69,20 @@ if (!$_GET['setup']){
 					' ( <a href="?editblog&id=' . $addblog . '">link</a> )</p><p>Ta vare på dette nummeret/denne linken i tilfelle du får behov for å redigere linken på et senere tidspunkt.';
 			}
 			break;
-			
+		# Rediger eksisterende blogg
 		case "editblog":
 			$editblog = $u->editURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
 			if ($editblog == 1){ $message = "<h1>Blogg oppdatert</h1></p>Takk for bidraget!</p>"; } else { $message = "<h1>Blogg ikke oppdatert</h1><p>Dette er garantert din egen feil.</p>"; }
 			break;
 	}
-	
-	ob_end_flush();
 }
 ?>
 <!DOCTYPE HTML>
 <html lang="no">
 	<head>
 		<meta charset="utf-8" />
-		<title>link magic 0.1.1</title>
+		<title>linktool 0.1</title>
+		<!-- Øivind Hoel 2011 -->
 		<link href="css3.css" rel="stylesheet" type="text/css" />
 	</head>
 
@@ -141,7 +134,7 @@ if (!$_GET['setup']){
 #
 switch ($_GET['action']){
 	case "account":
-		echo '<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon<br/></p>';
+		echo $l->showInfo(true);
 	break;
 
 	case "newblog":

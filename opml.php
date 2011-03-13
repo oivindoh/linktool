@@ -62,10 +62,14 @@ OPML;
 	}
 	
 	public function runSQL($SQL){
-		mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
-		@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
-		$return = mysql_query($SQL);
-		mysql_close();
+		try{
+			mysql_connect($this->c->db_host, $this->c->db_user,$this->c->db_pass);
+			@mysql_select_db($this->c->db_name) or die("asd... ingen tilgang til database");
+			$return = mysql_query($SQL);
+			mysql_close();
+		} catch(Exception $e){
+			echo 'Feil: ' . $e->getMessage();
+		}
 		return $return;
 	}
 }

@@ -55,12 +55,12 @@ TODO:
 		
 	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
 	
-	Bruk try/catch på databasefunksjonalitet
+	Bruk try/catch på databasefunksjonalitet -- 
 	
 	La setupscript opprette databasen/tabellene også.
 		
-	Skill ut html/css i templates som kan inkluderes
-			
+	# Skill ut html/css i templates som kan inkluderes ---- vil nok ikke gjøres nå som setup er bakt inn
+				
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
