@@ -16,8 +16,8 @@ HTML;
 		}
 	}
 	
-	if(!file_exists('conf.php') || isset($_POST['masterpass'])){
-		if($_POST['masterpass']){
+	if(!file_exists('conf.php') || (isset($_POST['masterpass']) && !empty($_POST['masterpass']))){
+		if($_POST['masterpass'] != ""){
 			if (md5($_POST['masterpass'] . $c->salt) != $c->masterpass){
 				# skriv lockfelt til config, kanskje?
 				# send mail?
@@ -64,7 +64,7 @@ PHP;
 			
 			#echo $config;
 			$writeconfig = file_put_contents('conf.php', $config);
-			echo 'writeconfig: ' . $writeconfig;
+			echo '<h1>Innstillinger lagret</h1><p>Du kan nå <a href="index.php">ta systemet i bruk</a></p>';
 		break;
 		default:
 		# Første steg, skaff databaseopplysningene
