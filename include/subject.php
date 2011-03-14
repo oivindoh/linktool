@@ -21,7 +21,7 @@ class SubjectHandler{
 		$term = $this->esc($term);
 		$code = $this->esc($code);
 		$name = $this->esc($name);
-		$SQL = "INSERT INTO subjects VALUES('$unique','$code','$term','$name','$user')";
+		$SQL = sprintf("INSERT INTO subjects VALUES('%s','%s','%s','%s','%s')", $unique, $code, $term, $name, $user);
 		$result = $this->runSQL($SQL); # true/false for INSERT
 		if ($result){
 			return 1;
@@ -59,12 +59,12 @@ HTML;
 		$id = $this->esc($id);
 		if ($confirm){
 			# Nødvendig SQL
-			$SQL = "DELETE FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '$id'";
-			$SQL2 = "DELETE FROM `subjects` WHERE `unique` = '$id'";
+			$SQL = sprintf("DELETE FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '%s'", $id);
+			$SQL2 = sprintf("DELETE FROM `subjects` WHERE `unique` = '%s'", $id);
 			
 			# Finn ut hvilke linker som også må bort
 			$array_of_links_to_delete = Array();
-			$SQL3 = "SELECT * FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '$id'";
+			$SQL3 = sprintf("SELECT * FROM `subjectlinks` WHERE `subjectlinks`.`subjects_unique` = '%s'", $id);
 			$result = $this->runSQL($SQL3);
 			if ($result){
 				$i = 0;
@@ -97,7 +97,7 @@ HTML;
 			return 1;
 		}
 		# ikke bekreftet
-		$SQL = "SELECT * FROM subjects WHERE `unique`='$id'";
+		$SQL = sprintf("SELECT * FROM subjects WHERE `unique`='%s'", $id);
 		$result = $this->runSQL($SQL);
 		if($result){
 			$result = mysql_fetch_assoc($result);
@@ -153,17 +153,21 @@ HTML;
 		</form>
 HTML;
 		# Inner Join Is The Enemy
-		$SQL = "SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
+		$SQL = sprintf("SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
 		INNER JOIN $db.subjectlinks ON
 		$db.subjectlinks.links_ref = $db.links.ref
 		INNER JOIN $db.subjects ON
 		$db.subjects.unique = $db.subjectlinks.subjects_unique
-		WHERE $db.subjectlinks.subjects_unique = '$id'";
+		WHERE $db.subjectlinks.subjects_unique = '%s'", $id);
 	
 		$result = $this->runSQL($SQL);
 		
 		# Hent første rad for å vise fagnavn over listen
 		$number_of_links = mysql_num_rows($result);								# Burde vel egentlig gjøres i sql
+		if($number_of_links === 0){
+			echo '<h1>Ingen tilknyttede blogger</h1>';
+			return 0;
+		}
 		$first_row = mysql_fetch_assoc($result);
 		$out = '
 			<h1>Blogger for ' . $first_row['name'] . ' (' . $number_of_links . ')</h1>
@@ -188,8 +192,8 @@ HTML;
 			
 			if ($this->l->getUserName() != ""){
 				# Vis linker til slett og endre om bruker er innlogget
-				$delete_change_links = '(<a href="?action=deleteblog&id='. $result_array['ref'] 
-				.'">Slett</a>) (<a href="?action=editblog&id='. $result_array['ref'] .'">Endre</a>) '. $rss_link;
+				$delete_change_links = '(<a href="?action=deleteblog&amp;id='. $result_array['ref'] 
+				.'">Slett</a>) (<a href="?action=editblog&amp;id='. $result_array['ref'] .'">Endre</a>) '. $rss_link;
 			}
 			
 			# Bruk tittel som linknavn om denne er hentet fram
@@ -231,7 +235,7 @@ HTML;
 	}
 	public function listByUser($user){
 		$user = $this->esc($user);
-		$SQL = "SELECT * FROM subjects WHERE users_email='$user'";
+		$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $user);
 		$result = $this->runSQL($SQL);
 		$out = '<div id="subjects_overview">';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
@@ -251,7 +255,6 @@ HTML;
 		}
 		$out .= '</div>';
 		return $out;
-		
 	
 	}
 	# Her genereres nøkkelen som deles ut til studenter

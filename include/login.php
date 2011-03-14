@@ -17,6 +17,13 @@ class LoginHandler {
 		$this->c = $configuration;
 	}
 	
+	public function loggedIn(){
+		if ($this->username != ""){
+			return true;
+		}
+		return false;
+	}
+	
 	#
 	# 	login(): Innlogging, verifisering av bruker
 	#		parameter: username, password
@@ -36,7 +43,7 @@ class LoginHandler {
 			$cookie = 1;
 		}
 		
-		$SQL = "SELECT * FROM `users` WHERE email='$u'";
+		$SQL = sprintf("SELECT * FROM `users` WHERE email='%s'", $u);
 		$result = $this->runSQL($SQL);
 		$result = mysql_fetch_array($result, MYSQL_ASSOC);
 		if ($result){
@@ -96,12 +103,12 @@ class LoginHandler {
 		$u = $this->esc($u);
 		
 		# Sjekk om bruker allerede er registrert
-		$SQL = "SELECT * FROM `users` WHERE email='$u'";
+		$SQL = sprintf("SELECT * FROM `users` WHERE email='%s'", $u);
 		$result = $this->runSQL($SQL);
 		$result = mysql_fetch_array($result, MYSQL_ASSOC);
 		if(!$result){
 			# bruker finnes ikke fra før, let's go!
-			$SQL = "INSERT INTO users VALUES('$u','$p','Navn...')";
+			$SQL = sprintf("INSERT INTO users VALUES('%s','%s','Navn...')", $u, $p);
 			$result = $this->runSQL($SQL);
 			if ($result){
 				return 1;

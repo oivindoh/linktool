@@ -33,19 +33,20 @@ class URLHandler{
 		$title = $this->esc($this->fetchTitle($url));
 		
 		# Sjekk at link ikke eksisterer og ikke blir lagt til i ikke-eksisterende fag
-		$SQL = "SELECT * FROM links WHERE ref='$ref'";
+		$SQL = sprintf("SELECT * FROM links WHERE ref='%s'", $ref);
 		$result = $this->runSQL($SQL);
 		$found_link = mysql_num_rows($result);
 		$fl_assoc = mysql_fetch_assoc($result);
 		$result = "";
-		$SQL = "SELECT * FROM subjects WHERE subjects.unique='$subj'";
+		$SQL = sprintf("SELECT * FROM subjects WHERE subjects.unique='%s'", $subj);
 		$result = $this->runSQL($SQL);
 		$found_subj = mysql_num_rows($result);
 		$fs_assoc = mysql_fetch_assoc($result);
 		
 		
 		# TODO / work in progress. 
-		$SQL = "SELECT * FROM subjectlinks WHERE links_ref='$ref'";
+		/*
+		$SQL = sprintf("SELECT * FROM subjectlinks WHERE links_ref='%s'", $ref);
 		$result = $this->runSQL($SQL);
 		$foundmatchinglink = mysql_num_rows($result);
 		if($foundmatchinglink){
@@ -54,16 +55,18 @@ class URLHandler{
 				# go for it
 				# ... hva med duplicate ref i db? bruke et nummerfelt med autoincrement som key istedenfor?
 			}
-		}
+		}*/
 				
 		if($found_link == 0 || !$found_link){
 			if($found_subj > 0 || $found_subj){
 				# "noe gikk forferdelig galt-land", men også tegn på at vi kom et stykke :)
-				$SQL = "INSERT INTO links VALUES('$ref','$url','$rss', '$author', '$desc', '$freq', 0, '$title')";
+				$SQL = sprintf("INSERT INTO links VALUES('%s','%s','%s', '%s', '%s', '%s', 0, '%s')", $ref, $url, $rss, $author, $desc, $freq, $title);
+				echo '1 ' . $SQL;
 				$result = $this->runSQL($SQL);
 				if($result){
 					# lagt til; legg så inn i mange-mange-tabellen
-					$SQL = "INSERT INTO subjectlinks VALUES('$subj', '$ref')";
+					$SQL = sprintf("INSERT INTO subjectlinks VALUES('%s', '%s')", $subj, $ref);
+					echo '2 ' . $SQL;
 					$result = $this->runSQL($SQL);
 					if($result){
 						# alt ok
@@ -93,7 +96,7 @@ class URLHandler{
 		$freq = $this->esc($freq);
 		$ref = $this->esc($ref);
 		
-		$SQL = "UPDATE links SET url='$url', rss='$rss', author='$author', description='$desc', frequency='$freq' WHERE ref='$ref'";
+		$SQL = sprintf("UPDATE links SET url='%s', rss='%s', author='%s', description='%s', frequency='%d' WHERE ref='$ref'", $url, $rss, $author, $desc, $freq, $ref);
 		$result = $this->runSQL($SQL);
 		if ($result){
 			# Oppdatert
@@ -107,15 +110,15 @@ class URLHandler{
 		$id = $this->esc($id);
 		
 		# Sjekk om URL tilhører bruker (via fag)
-		$SQL = "SELECT * FROM subjectlinks INNER JOIN subjects ON subjects.unique = subjectlinks.subjects_unique WHERE links_ref = '$id'";
+		$SQL = sprintf("SELECT * FROM subjectlinks INNER JOIN subjects ON subjects.unique = subjectlinks.subjects_unique WHERE links_ref = '%s'", $id);
 		$result = mysql_fetch_assoc($this->runSQL($SQL));
 		if ($result['users_email'] == $this->l->getUserName()){
 			# Bruker tilhører dette faget
-			$SQL = "DELETE FROM `subjectlinks` WHERE `subjectlinks`.`links_ref` = '$id'";
+			$SQL = sprintf("DELETE FROM `subjectlinks` WHERE `subjectlinks`.`links_ref` = '%s'", $id);
 			$result_manymany = $this->runSQL($SQL);
 			if ($result_manymany){
 				# Bloggen er fjernet
-				$SQL = "DELETE FROM `links` WHERE `ref` = '$id'";
+				$SQL = sprintf("DELETE FROM `links` WHERE `ref` = '%s'", $id);
 				$result_links = $this->runSQL($SQL);
 				if ($result_links){
 					# Bloggen er fjernet
@@ -146,7 +149,7 @@ HTML;
 		}
 		$url_reference = $this->esc($url_reference);
 		
-		$SQL = "SELECT * FROM links WHERE ref='$url_reference'";
+		$SQL = sprintf("SELECT * FROM links WHERE ref='%s'", $url_reference);
 		$result = $this->runSQL($SQL);
 		$selected_blog = mysql_fetch_assoc($result);
 		if(!$selected_blog) { echo "<h1>Feil</h1><p>Angitt blogg eksisterer ikke</p>"; return 0; }
@@ -154,15 +157,15 @@ HTML;
 		<h1>Rediger blogg</h1>
 		<p>$selected_blog[url] ($selected_blog[author])</p>
 		<form action="?" method="post">
-			<fieldset>
+			<fieldset><legend>Adresser</legend>
 				<input type="hidden" name="faction" value="editblog"/>
 				<input type="hidden" name="id" value="$_GET[id]"/>
-				<label><input type="text" name="url" value="$selected_blog[url]" $urlmatch required /> <strong>Adresse *</strong></label><br />
-				<label><input type="text" name="rss" value="$selected_blog[rss]" $urlmatch /> RSS-feed</label><br />
-				<label><input type="text" name="author" value="$selected_blog[author]" required /> <strong>Ditt navn *</strong></label><br />
-				<label><input type="text" name="desc" value="$selected_blog[description]" required /> Beskrivelse av bloggen</label><br />
+				<label><input class="long" type="text" name="url" value="$selected_blog[url]" $urlmatch required /> <strong>Adresse *</strong></label><br />
+				<label><input class="long" type="text" name="rss" value="$selected_blog[rss]" $urlmatch /> RSS-feed</label><br />
+			</fieldset>
+			<fieldset><legend>Annen informasjon</legend>
 				<label>
-				<select name="freq">
+				<select class="short" name="freq">
 HTML;
 					$selected_blog['frequency'] == 0 ? $html .= '<option value="0" selected>Daglig</option>' : $html .= '<option value="0">Daglig</option>';
 					$selected_blog['frequency'] == 1 ? $html .= '<option value="1" selected>Ukentlig</option>' : $html .= '<option value="1">Ukentlig</option>';
@@ -170,7 +173,12 @@ HTML;
 					$selected_blog['frequency'] == 3 ? $html .= '<option value="3" selected>Intent mønster</option>' : $html .= '<option value="3">Intet mønster</option>';
 
 $html = $html . <<<HTML
-				</select> Oppdateringsfrekvens</label>
+				</select> Oppdateringsfrekvens</label><br />
+				<label><input class="short" type="text" name="author" value="$selected_blog[author]" required /> <strong>Ditt navn *</strong></label><br />
+				<label>
+					<textarea type="text" name="desc" required>$selected_blog[description]</textarea>
+					 Beskrivelse
+				</label>
 			</fieldset>
 			<fieldset>
 				<button type="submit">Lagre</button>
@@ -200,7 +208,7 @@ HTML;
 			# legge inn i noen annens fag.
 			else{
 				$usernforsql = $this->l->getUserName();
-				$SQL = "SELECT * FROM subjects WHERE users_email='$usernforsql'";
+				$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $usernforsql);
 				$result = $this->runSQL($SQL);
 				while($result_array = mysql_fetch_assoc($result)){
 					$subjectoptions .= '<option value="' . $result_array['unique'] .'">' . $result_array['name'] . '</option>';
@@ -251,7 +259,7 @@ HTML;
 					<strong> Ditt navn *</strong>
 				</label><br />
 				<label>
-					<textarea type="text" name="desc" maxlength="45" placeholder="Verdens beste haiku-blogg" required></textarea>
+					<textarea type="text" name="desc" placeholder="Verdens beste haiku-blogg" required></textarea>
 					 Beskrivelse
 				</label>
 			</fieldset>
@@ -273,7 +281,7 @@ HTML;
 	}
 		
 	public function esc($string){
-		return str_replace(array('--', ';', '\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('- -', '\;', '\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $string); 
+		return htmlentities(str_replace(array('--', ';', '\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('- -', '\;', '\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $string), ENT_QUOTES, 'UTF-8'); 
 	}
 	public function runSQL($SQL){
 		try{

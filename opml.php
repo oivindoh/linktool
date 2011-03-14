@@ -32,12 +32,12 @@
 </opml>
 OPML;
 			# Samme som i subject.php
-			$SQL = "SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
+			$SQL = sprintf("SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
 			INNER JOIN $db.subjectlinks ON
 			$db.subjectlinks.links_ref = $db.links.ref
 			INNER JOIN $db.subjects ON
 			$db.subjects.unique = $db.subjectlinks.subjects_unique
-			WHERE $db.subjectlinks.subjects_unique = '$id'";
+			WHERE $db.subjectlinks.subjects_unique = '%s'", $id);
 			$result = $this->runSQL($SQL);
 
 			# Hent første rad for å vise fagnavn over listen
