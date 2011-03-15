@@ -237,6 +237,11 @@ HTML;
 		$user = $this->esc($user);
 		$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $user);
 		$result = $this->runSQL($SQL);
+		if (mysql_num_rows($result) < 1){
+			$out = '<div id="subjects_overview"><p>Du har enda ikke registrert et fag; <a href="?action=newsubject">hva med å gjøre dette nå?</a></p>';
+			return $out;
+		}
+		
 		$out = '<div id="subjects_overview">';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			$out .= <<<HTML

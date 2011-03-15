@@ -30,7 +30,7 @@ HTML;
 	switch($setup){
 		
 		case 1:
-			#$salt = time();
+			#$salt = time(); TODO BRUK md5(time());
 			$salt = 1299387344;
 			$masterpass = md5($_POST['adminpass'] . $salt);
 			if ($_POST['debug'] != 1){ $debug = 0; } else { $debug = 1; }
@@ -64,11 +64,47 @@ PHP;
 			
 			#echo $config;
 			$writeconfig = file_put_contents('conf.php', $config);
+			
+			# Opprett database om dette er valgt. Tar ibruk sql.sql-filen som blir distribuert sammen med verktøyet
+			# denne filen er igjen opprettet ved hjelp av mysqlworkbench pour le mac
+			if($_POST['createdb'] == 1){
+				$distributed_sql_file = file_get_contents('sql.sql');
+				# den originale modellen har med databasenavn oivindoh--
+				$sql_file = str_replace('oivindoh', $_POST['db_name'], $distributed_sql_file);
+				# filen er bare en samling spørringer delt opp av ;
+				# sett hver spørring inn i en array siden mysq_query() bare utfører én i slengen
+				$sql_array = explode(';', $sql_file);
+				mysql_connect($_POST['db_host'], $_POST['db_user'],$_POST['db_pass']);
+				$results = '';
+				$i = 0;
+				# utfør alle spørringene
+				foreach($sql_array as $query){
+					$result .= $i . ': ' . mysql_query($query);
+					$i++;
+					
+				}
+				# lukk tilkoblingen
+				mysql_close();
+			}
+			
+			
 			echo '<h1>Innstillinger lagret</h1><p>Du kan nå <a href="index.php">ta systemet i bruk</a></p>';
 		break;
 		default:
+		
+		if(isset($c)){
+			$hoform = $c->db_host;
+			$usform = $c->db_user;
+			$paform = $c->db_pass;
+			$dbform = $c->db_name;
+			if($c->debug == 1){
+				$deform = ' checked';
+			}	
+		}
+		
+		
 		# Første steg, skaff databaseopplysningene
-		$md5time = md5(time());
+		$md5time = substr(md5(time()), -10);
 		if(isset($_POST['masterpass'])){ $followthrough = '<input type="hidden" name="masterpass" value="' . $_POST['masterpass'] . '" />'; }
 		$setup_form = <<<HTML
 		<h1>Oppsett av linktool</h1>
@@ -79,14 +115,15 @@ PHP;
 				<fieldset><legend>Databaseoppsett</legend>
 					<input type="hidden" name="setup" value="1" />
 					$followthrough
-					<legend><input type="text" name="db_host" placeholder="db.stud.aitel.hist.no" required /> Server</legend>
-					<legend><input type="text" name="db_user" placeholder="root" required /> Brukernavn</legend>
-					<legend><input type="text" name="db_pass" placeholder="passord" required /> Passord</legend>
-					<legend><input type="text" name="db_name" placeholder="linktool" required /> Databasenavn</legend>
+					<label><input type="text" name="db_host" placeholder="db.stud.aitel.hist.no" value="$hoform" required /> Server</label><br />
+					<label><input type="text" name="db_user" placeholder="root" value="$usform" required /> Brukernavn</label><br />
+					<label><input type="text" name="db_pass" placeholder="passord" value="$paform" required /> Passord</label><br />
+					<label><input type="text" name="db_name" placeholder="linktool" value="$dbform" required /> Databasenavn</label><br />
 				</fieldset>
 				<fieldset><legend>Andre innstillinger</legend>
-					<legend><input type="text" name="adminpass" value="$md5time"/> Administratorpassord for å overskrive konfigurasjon</legend>
-					<legend><input type="checkbox" name="debug" value="1"/> Feilsøkingsmodus</legend>
+					<label><input type="text" name="adminpass" value="$md5time"/> Administratorpassord for å overskrive konfigurasjon</label><br />
+					<label><input type="checkbox" name="debug" value="1" $deform /> Feilsøkingsmodus</label><br />
+					<label><input type="checkbox" name="createdb" value="1" /> Opprett database</label><br />
 				</fieldset>
 				<button type="submit">Lagre</button>
 			</form>
@@ -95,5 +132,4 @@ HTML;
 		break;
 	}
 }
-	
 ?>
