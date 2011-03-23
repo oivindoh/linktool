@@ -238,7 +238,5 @@ else {
 				<a href="http://validator.w3.org/check/referer">html5</a> <a href="http://jigsaw.w3.org/css-validator/check/referer?profile=css3">css3</a> - ses best (identisk) i Firefox 4+, Safari 5+ og Chrome 9+, <small>men fungerer nå også utmerket i ff3.6 og opera11 med et par små hacks</small>
 			</div>
 			</footer>
-		<script type="text/javascript" src="diverse/details.js"></script>
-		
 	</body>
 </html>

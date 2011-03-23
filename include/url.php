@@ -237,11 +237,11 @@ HTML;
 				<input type="hidden" name="faction" value="addblog"/>
 				<input type="hidden" name="id" value="$_GET[id]"/>
 				<label>
-					<input class="long" type="text" name="url" maxlength="45"placeholder="http://domene.tld/sti/" $urlmatch required />
+					<input class="long" type="text" name="url" placeholder="http://domene.tld/sti/" $urlmatch required />
 					<strong> Blogg *</strong>
 				</label><br />
 				<label>
-					<input class="long" type="text" name="rss" maxlength="45" placeholder="http://domene.tld/sti/RSS" $urlmatch />
+					<input class="long" type="text" name="rss" placeholder="http://domene.tld/sti/RSS" $urlmatch />
 					 RSS
 				</label>
 			</fieldset>

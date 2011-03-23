@@ -245,17 +245,16 @@ HTML;
 		$out = '<div id="subjects_overview">';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			$out .= <<<HTML
-			<details><summary>$row[name]</summary>
-			<div class="subjects_single_container">
-			<ul>
-			<li title="Fagkode">$row[code]</li>
-			<li title="Semester">$row[term]</li>
-			<li title="Unik link"><a href="?action=newblog&id=$row[unique]">studentlink</a></li>
-			<li title="Liste over tilknyttede blogger"><a href="?action=listblogs&id=$row[unique]">vis/rediger blogger</a></li>
-			<li class="delete" title="Slett"><a href="?action=deletesubject&id=$row[unique]">slett</a></li>
-			</ul>
+			<h3 class="liste_header">$row[name]</h3>
+			<div class="liste_item">
+				<ul>
+					<li title="Fagkode">$row[code]</li>
+					<li title="Semester">$row[term]</li>
+					<li title="Unik link"><a href="?action=newblog&id=$row[unique]">studentlink</a></li>
+					<li title="Liste over tilknyttede blogger"><a href="?action=listblogs&id=$row[unique]">vis/rediger blogger</a></li>
+					<li class="delete" title="Slett"><a href="?action=deletesubject&id=$row[unique]">slett</a></li>
+				</ul>
 			</div>
-			</details>
 HTML;
 		}
 		$out .= '</div>';
