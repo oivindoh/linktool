@@ -98,3 +98,12 @@ TODO:
 #		parameter: username, password
 #		return: 1 (logged in) | 2 (wrong passord) | 0 (user not found)
 #
+
+
+====
+
+	Etter brukertester:
+	
+	Meny:
+		Uten innlogging: ikke vis linker?
+		Etter innlogging: ikke vis legg til/rediger blogg om bruker ikke har fag

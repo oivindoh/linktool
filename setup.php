@@ -123,9 +123,11 @@ PHP;
 				<fieldset><legend>Andre innstillinger</legend>
 					<label><input type="text" name="adminpass" value="$md5time"/> Administratorpassord for å overskrive konfigurasjon</label><br />
 					<label><input type="checkbox" name="debug" value="1" $deform /> Feilsøkingsmodus</label><br />
-					<label><input type="checkbox" name="createdb" value="1" /> Opprett database</label><br />
+					<label><input type="checkbox" name="createdb" value="1" /> Opprett database <small>(overskriver eventuell eksisterende database ved samme navn)</small></label><br />
 				</fieldset>
-				<button type="submit">Lagre</button>
+				<fieldset>
+					<button type="submit">Lagre</button>
+				</fieldset>
 			</form>
 HTML;
 		echo $setup_form;

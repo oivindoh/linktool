@@ -96,6 +96,8 @@ if (!isset($_GET['setup'])){
 		<title>linktool 0.1</title>
 		<!-- Øivind Hoel 2011 -->
 		<link href="css3.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="diverse/jQuery.js"></script>   
+		<script type="text/javascript" src="diverse/linktool.js"></script>                 
 	</head>
 
 	<body>
