@@ -2,10 +2,12 @@
 class URLHandler{
 	private $c;
 	private $l;
+	private $s;
 	
-	public function URLHandler(&$conf, &$login){
+	public function URLHandler(&$conf, &$login, &$sub){
 		$this->c = &$conf;
 		$this->l = &$login;
+		$this->s = &$sub;
 	}
 	
 	public function generateKey($url, $author){
@@ -133,7 +135,7 @@ class URLHandler{
 		# Skaff info
 		$urlmatch = 'pattern="https?://.+" title="Må være en gyldig adresse som begynner med http:// eller https://"';
 		if(!isset($url_reference)){
-			echo "<h1>Rediger blogg</h1><p>Blogg må angis ved referanse. Har du denne, kan du skrive den inn her:</p>";
+			echo '<div id="form_description"><h1>Rediger blogg</h1><p>Blogg må angis ved referanse. Har du denne, kan du skrive den inn her:</p></div>';
 			$html =
 <<<HTML
 <form method="get">
@@ -154,8 +156,10 @@ HTML;
 		$selected_blog = mysql_fetch_assoc($result);
 		if(!$selected_blog) { echo "<h1>Feil</h1><p>Angitt blogg eksisterer ikke</p>"; return 0; }
 		$html = <<<HTML
-		<h1>Rediger blogg</h1>
-		<p>$selected_blog[url] ($selected_blog[author])</p>
+		<div id="form_description">
+			<h1>Rediger blogg</h1>
+			<p>$selected_blog[url] ($selected_blog[author])</p>
+		</div>
 		<form action="?" method="post">
 			<fieldset><legend>Adresser</legend>
 				<input type="hidden" name="faction" value="editblog"/>
@@ -175,9 +179,8 @@ HTML;
 $html = $html . <<<HTML
 				</select> Oppdateringsfrekvens</label><br />
 				<label><input class="short" type="text" name="author" value="$selected_blog[author]" required /> <strong>Ditt navn *</strong></label><br />
-				<label>
+				<label>Beskrivelse<br />
 					<textarea type="text" name="desc" required>$selected_blog[description]</textarea>
-					 Beskrivelse
 				</label>
 			</fieldset>
 			<fieldset>
@@ -193,12 +196,17 @@ HTML;
 	
 	public function showURLForm($id){
 		$urlmatch = 'pattern="https?://.+"';
+		$has_subjects = $this->s->listByUser($this->l->getUserName());
+		$username = $this->l->getUserName();
 		if (empty($id) || strlen($id) != 32){
 			# Hvis ID ikke er oppgitt eller feil lengde og bruker ikke er innlogget, spør etter ID.
-			if($this->l->getUserName() == ""){
+			if($username == "" || !$has_subjects){
+			$infotext = (!$has_subjects && $username == "" ? '<p>Har du ikke en fagreferanse (lang remse bokstaver og tall), kan du sjekke it\'sLearning eller kontakte din faglærer for å få oppgitt denne. Uten fagreferanse kan du dessverre ikke legge til din blogg.</p>'
+										: '<p>Inntil du har <a href="?action=newsubject">registrert et fag på deg selv</a>, må du ha en gyldig fagreferanse (fra et fag du ikke er tilknyttet) for å legge til en blogg.</p>');
+				
 			$form_id = <<<HTML
 			<fieldset><legend>Fagreferanse</legend>
-				<p>Har du ikke en fagreferanse (lang remse bokstaver og tall), kan du sjekke it'sLearning eller kontakte din faglærer for å få oppgitt denne. Uten fagreferanse kan du dessverre ikke legge til din blogg.</p>
+				$infotext
 				<input type="hidden" name="faction" value="selectnewblog">
 				<label><input class="long" type="text" name="manual_id" maxlength="32" required pattern="^[0-9a-f]{32}$" title="Sørg for at du kopierer inn referansen eksakt"/></label>
 			</fieldset>
@@ -207,8 +215,7 @@ HTML;
 			# Hvis bruker derimot er innlogget, vis heller en liste over brukerens fag; anta at han ikke vil
 			# legge inn i noen annens fag.
 			else{
-				$usernforsql = $this->l->getUserName();
-				$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $usernforsql);
+				$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $username);
 				$result = $this->runSQL($SQL);
 				while($result_array = mysql_fetch_assoc($result)){
 					$subjectoptions .= '<option value="' . $result_array['unique'] .'">' . $result_array['name'] . '</option>';
@@ -216,7 +223,7 @@ HTML;
 				
 				$form_id = <<<HTML
 				<fieldset><legend>Fag</legend>
-					<p>En blogg må være tilknyttet et fag for å kunne registreres. Siden du er innlogget, vil du her få velge mellom dine fag, hvis du har noen registrert på deg. Vil du legge til en blogg i et fag registrert på en annen person, må du benytte link oppgitt av denne.</p>
+					<p>En blogg må være tilknyttet et fag for å kunne registreres. Siden du er innlogget og er tilknyttet fag, vil du her få velge mellom disse. Vil du legge til en blogg i et fag registrert på en annen person, må du benytte link oppgitt av denne.</p>
 					<input type="hidden" name="faction" value="selectnewblog">
 					<select name="manual_id">
 						$subjectoptions
@@ -258,9 +265,8 @@ HTML;
 					<input class="short" type="text" name="author" placeholder="Jason Bourne" required />
 					<strong> Ditt navn *</strong>
 				</label><br />
-				<label>
+				<label>Beskrivelse <br />
 					<textarea type="text" name="desc" placeholder="Verdens beste haiku-blogg" required></textarea>
-					 Beskrivelse
 				</label>
 			</fieldset>
 			<br />

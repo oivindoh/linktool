@@ -16,8 +16,7 @@ html{
 	}
 body{
 	background: #4c5251 url("bilder/grad_666_trans.png") repeat-x top left;
-	/*font-family: "Essays 1743";*/
-	font-family: "Cambria", "Utopia", "Bitstream Charter", "Lucida Fax", "Palatino Linotype", "Georgia", "Hoefler Text", "Bitstream Vera Serif", "Lucida Sans", "Trebuchet MS", serif;
+	font-family: "Garamond", "Cambria", "Utopia", "Bitstream Charter", "Lucida Fax", "Palatino Linotype", "Georgia", "Hoefler Text", "Bitstream Vera Serif", "Lucida Sans", "Trebuchet MS", serif;
 	font-size: 1em;
 	line-height: 1.5;
 	font-weight: 400;
@@ -63,21 +62,6 @@ a:hover{
 	color: #EF4629;
 }
 
-td, th{
-	background-color: #ddd;
-	color: #333;
-	padding: 5px;
-	border-bottom: 1px dotted #333;
-}
-
-tr:nth-of-type(odd)>td{
-	background-color: #bbb;
-}
-
-tr>td:hover{
-	background-color: #fff;
-}
-
 .liste_header{	
 	padding: 5px 5px 5px 25px;
 	border: 1px solid #555;
@@ -93,7 +77,7 @@ tr>td:hover{
 }
 
 .liste_item{
-	margin-top: 5px;
+
 }
 
 /*
@@ -180,16 +164,8 @@ tr>td:hover{
 	Innhold
 	*/
 
-#innhold_tekst>p{
+#innhold_tekst p{
 	margin: 7px;
-}
-
-#innhold_tekst>p:nth-of-type(odd){
-	border-left: 3px solid #666;
-	padding-left: 5px;
-}
-#innhold_tekst>p:nth-of-type(even){
-	padding-left: 7px;
 }
 
 #innhold_footer{
@@ -214,22 +190,6 @@ tr>td:hover{
 	padding: 7px 25px 7px 25px;
 }
 
-.kode{
-	font-size: 10px;
-	font-family: monospace;
-	background: #fff;
-	overflow: auto;
-	float: left;
-	padding: 5px;
-	width: 100%;
-	border-radius: 15px;
-	-moz-border-radius: 15px; /* for ff 3.6 */
-	
-}
-
-form li{
-	list-style-type: none;
-}
 input, textarea{
 	border: none;
 	padding: 3px;
@@ -302,14 +262,15 @@ input:invalid, textarea:invalid{
 	border-radius: 15px;
 	padding: 5px;
 }
-#linklist li span{
-	color: #000;
-	float: right;
-	padding: 5px;
-	background: #444;
-	border-radius: 15px;
-}
 
+#linklist li.admin{
+	background-color: #222;
+	margin: 0 20% 0 20%;
+	border-radius: 0 0 10px 10px;
+	text-align: center;
+	padding: 3px;
+
+}
 #subjects_overview a {
 	border-radius: 10px;
 	padding: 5px;

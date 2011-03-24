@@ -15,6 +15,7 @@ FUNKSJONALITET:
 	Listing av blogger tilhørende et fag
 	
 	Eksportering av bloggliste til OPML-format
+			Gjøres via GET for enkel linking (opprinnelig POST-action ;-p)
 	
 	Registrering av ny blogg ved hjelp av link med 32bokstavs fagID
 	(XTRA) Registrerer ikke samme blogg-url med samme forfatter to ganger
@@ -34,7 +35,7 @@ FUNKSJONALITET:
 			viser alltid url direkte eller indirekte gjennom tittel-link
 	
 	Setupscript som lagrer databaseinformasjon og lignende ved førstegangs kjøring
-		- kan også nås senere ved å legge til ?setup=1 i url. Da kan man - om man har 
+		- kan også nås senere ved å legge til ?setup i url. Da kan man - om man har 
 		administratorpassordet som ble satt ved første gangs kjøring - endre innstillingene.
 		- kan opprette nødvendig database og tabeller om dette velges (dropper eksisterende - 
 		burde kanskje fjerne akkurat denne biten før ferdig versjon)
@@ -43,15 +44,15 @@ FUNKSJONALITET:
 		- Sletter også alle tilhørende linker
 	
 TODO:
+
+	AJAX. AJAX. (innlogging i første omgang)
+	
+	Lær mer om bruk av jQuery
+	
 	Lærer oppdaterer passord/navn/epost
 		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
 	
-	Semester
-		- La velge dato
-		- Lagre som unixtid i db
-		- måned 01-06....blabla
-	
-	Funksjonalitet for å få resatt passord
+	Funksjonalitet for å få resatt passord (krever mail)
 	
 	Gjøre om XML-funksjonaliteten:
 		gi ompl.php fagID via GET, og listen skal skrives ut.
@@ -63,9 +64,6 @@ TODO:
 	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
 	
 	Mindre tomme sider. Møter bruker en tom liste skal det henvises til muligheter til å legge til innhold
-	
-	# Skill ut html/css i templates som kan inkluderes ---- vil nok ikke gjøres nå som setup er bakt inn
-	
 		
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
 	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING

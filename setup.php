@@ -1,3 +1,7 @@
+<script type="text/javascript">
+$('#innhold').hide();
+$('#innhold').fadeIn('600');
+</script>
 <?php
 	if(file_exists('conf.php')){
 		include('conf.php');

@@ -12,7 +12,7 @@ if (!isset($_GET['setup'])){
 	# opprett objekter og message-variabel
 	$c = new Config();
 	$l = new LoginHandler(&$c);
-	$u = new URLHandler(&$c, &$l);
+	$u = new URLHandler(&$c, &$l, &$s);
 	$s = new SubjectHandler(&$c, &$l);
 	
 	# cookielogin (endelig, usynlig BOM character ødela...)
@@ -44,7 +44,8 @@ if (!isset($_GET['setup'])){
 			break;
 		# Legge til nytt fag
 		case "addsubject":
-			$addsubject = $s->addSubject($_POST['code'], $_POST['term'], $_POST['name']);
+			$posted_term = $_POST['term_semester'] . '/' . $_POST['term_year'];
+			$addsubject = $s->addSubject($_POST['code'], $posted_term, $_POST['name']);
 			$message = '<h1>Legg til fag</h1><span class="error">Fag finnes allerede i databasen';
 			if($addsubject == 1){ $message = '<h1>Legg til fag</h1><span class="success">Fag lagt til</span>'; }
 			break;
@@ -68,7 +69,7 @@ if (!isset($_GET['setup'])){
 					$message = "<h1>Feil</h1><p>Angitt fag eksisterer ikke"; break;
 				default:
 					$message = '<h1>Blogg lagt til</h1><p>Takk for ditt bidrag!<br />Ditt referansenummer er ' . $addblog . 
-					' ( <a href="?editblog&id=' . $addblog . '">link</a> )</p><p>Ta vare på dette nummeret/denne linken i tilfelle du får behov for å redigere linken på et senere tidspunkt.';
+					' ( <a href="?action=editblog&id=' . $addblog . '">link</a> )</p><p>Ta vare på dette nummeret/denne linken i tilfelle du får behov for å redigere linken på et senere tidspunkt.';
 			}
 			break;
 		# Rediger eksisterende blogg
@@ -93,7 +94,7 @@ if (!isset($_GET['setup'])){
 <html lang="no">
 	<head>
 		<meta charset="utf-8" />
-		<title>linktool 0.1</title>
+		<title>linktool 0.2</title>
 		<!-- Øivind Hoel 2011 -->
 		<link href="css3.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="diverse/jQuery.js"></script>   
@@ -210,7 +211,12 @@ switch ($_GET['action']){
 	default:
 		if ($l->getUserName() != ""){
 			echo '<h1>Dine fag</h1>';
-			echo $s->listByUser($l->getUserName());
+			$user_subject_list = $s->listByUser($l->getUserName());
+			if(!$user_subject_list){
+				echo '<div id="subjects_overview"><p>Du har enda ikke registrert et fag; <a href="?action=newsubject">hva med å gjøre dette nå?</a></p>';
+				break;
+			}
+			echo $user_subject_list;
 			break;
 		}
 		echo "<h1>Bloggverktøy</h1><p>Her skjedde det lite... Hva med å registrere deg/logge deg inn?</p>

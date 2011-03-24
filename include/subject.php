@@ -30,17 +30,41 @@ class SubjectHandler{
 	}
 	
 	public function showAddSubjectForm(){
+		# Lag optionliste for årstall; inneværende pluss to
+		$currentyear = date(Y);
+		$options_year = '';
+		for ($i = $currentyear; $i < $currentyear+3; $i++){
+			$options_year .= '<option value="'. $i . '">' . $i . '</option>';
+		}
+		
+		# Forhåndsvelg semester utifra hvilket vi er i
+		# - usannsynlig at noen vil opprette et fag for samme semester etter oktober (høst)
+		# og mars (vår), så vær litt semismart her
+		$options_term = (date(n) > 10 || date(n) < 4 
+							? '<option value="H">Høst</option><option value="V" selected>Vår</option>'
+							: '<option value="H" selected>Høst</option><option value="V">Vår</option>'
+							);
 		$html = <<<HTML
-		<h1>Registrer nytt fag</h1>
-		<p>Her kan du registrere et nytt fag, der du blir stående som eneste person med full oversikt og mulighet til å 
+		<div id="form_description">
+			<h1>Registrer nytt fag</h1>
+			<p>Her kan du registrere et nytt fag, der du blir stående som eneste person med full oversikt og mulighet til å 
 			slette/endre linker uten å måtte huske på referansenummer i hvert enkelt tilfelle.</p>
+		</div>
 		<form action="?" method="post">
 			<fieldset><legend>Faginformasjon</legend>
 				<input type="hidden" name="faction" value="addsubject">
 				
-				<label><input class="short" type="text" name="name" required placeholder="PHP - Introduksjonskurs"/> Navn</label><br />
-				<label><input class="short" type="text" name="term" /> Semester</label><br />
-				<label><input class="short" type="text" name="code" placeholder="PHP101"/> Fagkode</label>
+				<label><input class="long" type="text" name="name" required placeholder="PHP - Introduksjonskurs"/> Navn</label><br />
+				<label><input class="short" type="text" name="code" placeholder="PHP101"/> Fagkode</label><br />
+					<select name="term_semester">
+						$options_term
+					</select>
+				<label>
+					<select name="term_year">
+						$options_year
+					</select>
+					 Semester
+				</label>
 			</fieldset>
 			<div>
 			<button type="submit">Registrer fag</button>
@@ -102,7 +126,7 @@ HTML;
 		if($result){
 			$result = mysql_fetch_assoc($result);
 			$html = <<<HTML
-			<h1>Bekreft sletting av faget $result[name]</h1>
+			<h1>Bekreft sletting av $result[name]</h1>
 			<p>Det er <strong>ikke</strong> mulig å angre dette valget, og samtlige blogger 
 				tilknyttet faget vil også bli fjernet fra systemet</p>
 			<form>
@@ -180,21 +204,23 @@ HTML;
 		# Opprett OMPL-skjema
 		$ompl_list = "";
 		while($result_array = mysql_fetch_assoc($result)){
-
+			$delete_change_links = '';
+			$rss_link = '';
 			# Vis RSS-link om feltet ikke er tomt og bruker har valgt å vise RSS
 			if($result_array['rss'] != "" && $rss){
 				$rss_link = '(<a href="'. $result_array['rss'] .'">RSS</a>)';
 				}
-				
-			# Sett slett/endre-linker til rss-link som standard, siden 
-			# brukere som ikke er innlogget ikke vil komme innom neste conditional
-			$delete_change_links = $rss_link;
-			
+
 			if ($this->l->getUserName() != ""){
 				# Vis linker til slett og endre om bruker er innlogget
-				$delete_change_links = '(<a href="?action=deleteblog&amp;id='. $result_array['ref'] 
-				.'">Slett</a>) (<a href="?action=editblog&amp;id='. $result_array['ref'] .'">Endre</a>) '. $rss_link;
+				$delete_change_links = '<li class="admin">(<a href="?action=deleteblog&amp;id='. $result_array['ref'] 
+				.'">Slett</a>) (<a href="?action=editblog&amp;id='. $result_array['ref'] .'">Endre</a>) '. $rss_link . '</li>';
 			}
+			elseif ($rss_link) {
+				$delete_change_links = '<li class="admin">' . $rss_link . '</li>';
+			}
+			
+			//$delete_change_links = '<li class="admin">' . $delete_change_links . $rss_link . '</li>';
 			
 			# Bruk tittel som linknavn om denne er hentet fram
 			$result_array['title'] != "" || $result_array['title'] != null
@@ -205,7 +231,7 @@ HTML;
 			<ul>
 				<li>
 					<h3><a href="go.php?to='. $result_array['url'] . '">'. $url_link_text 
-					.'</a></h3><span class="linklist_delete_edit_links">'. $delete_change_links .'</span></li>';
+					.'</a></h3></li>'. $delete_change_links;
 			
 			$description ? $out .= '<li><blockquote>' . $result_array['description'] . '</blockquote></li>' : $out = $out;
 			$url ? $out .= '<li>URL: ' . $result_array['url'] . '</li>' : $out = $out;
@@ -220,7 +246,7 @@ HTML;
 			
 			$frequency ? $out .= '<li>Oppdateringsfrekvens: ' . $frequency_text . '</li>' : $out = $out;
 			$clicks ? $out .= '<li>Antall visninger: ' . $result_array['clicks'] . '</li>' : $out = $out;
-			$out .= '</ul>';			
+			$out .= "\n</ul>";
 		}
 		
 		$opml_form = <<<HTML
@@ -238,8 +264,7 @@ HTML;
 		$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $user);
 		$result = $this->runSQL($SQL);
 		if (mysql_num_rows($result) < 1){
-			$out = '<div id="subjects_overview"><p>Du har enda ikke registrert et fag; <a href="?action=newsubject">hva med å gjøre dette nå?</a></p>';
-			return $out;
+			return false;
 		}
 		
 		$out = '<div id="subjects_overview">';
