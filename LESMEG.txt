@@ -45,6 +45,15 @@ FUNKSJONALITET:
 	
 TODO:
 
+	Make DB return functions more general. Return arrays, not html :<
+
+	Bytt til mysqli?
+		Krever PHP5, mysql 4.1.3/5.0.7 eller nyere
+			aitel = 5.0.51a
+			her: 5.1.44
+	
+	Slidedown-meny for brukers fag
+		
 	AJAX. AJAX. (innlogging i første omgang)
 	
 	Lær mer om bruk av jQuery

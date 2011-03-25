@@ -3,11 +3,13 @@ class URLHandler{
 	private $c;
 	private $l;
 	private $s;
+	private $d;
 	
-	public function URLHandler(&$conf, &$login, &$sub){
+	public function URLHandler(&$conf, &$login, &$sub, &$db){
 		$this->c = &$conf;
 		$this->l = &$login;
 		$this->s = &$sub;
+		$this->d = &$db;
 	}
 	
 	public function generateKey($url, $author){
@@ -216,10 +218,11 @@ HTML;
 			# legge inn i noen annens fag.
 			else{
 				$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $username);
-				$result = $this->runSQL($SQL);
-				while($result_array = mysql_fetch_assoc($result)){
-					$subjectoptions .= '<option value="' . $result_array['unique'] .'">' . $result_array['name'] . '</option>';
+				$result = $this->runSQL2($SQL);
+				while ($subjectrow = $result->fetch_object()){
+					$subjectoptions .= '<option value="' . $subjectrow->unique . '">' . $subjectrow->name . '</option>';
 				}
+				$result->close;
 				
 				$form_id = <<<HTML
 				<fieldset><legend>Fag</legend>
@@ -299,6 +302,21 @@ HTML;
 			echo 'Feil: ' . $e->getMessage();
 		}
 		return $return;
+	}
+	
+	public function runSQL2($SQL){
+		// Se etter feilmelding under tilkobling
+		if (mysqli_connect_errno()){
+			printf("Tilkoblingsfeil (mySQL - url.php)\n %s", mysqli_connect_error());
+			exit();
+		}
+		// Kjør spørring
+		if($result = $this->d->query($SQL)){
+			// Spørring utført, bruk resultat
+			return $result;
+		}
+		// Noe gikk galt under kjøring av spørring
+		return 0;
 	}
 }
 

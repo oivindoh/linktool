@@ -57,8 +57,8 @@ class LoginHandler {
 				
 				# sett cookie, gyldig en time
 				if ($cookie != 1){
-					setcookie("userName", $this->username, time()+3600);
-					setcookie("passHash", $p_cookie, time()+3600);	
+					setcookie("userName", $this->username, time()+604800);
+					setcookie("passHash", $p_cookie, time()+604800);	
 					}							
 				return 1;
 			}
@@ -183,7 +183,9 @@ HTML;
 	public function showInfo($more = false){
 		if($more){
 			$info = <<<HTML
-			<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon<br/></p>
+			<div id="form_description">
+			<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon</p>
+			</div>
 			<form method="post" action="?">
 				<fieldset><legend>Personalia</legend>
 					<input type="hidden" name="faction" value="accountupdate"/>

@@ -11,9 +11,11 @@ if (!isset($_GET['setup'])){
 
 	# opprett objekter og message-variabel
 	$c = new Config();
+	$d = new mysqli($c->db_host, $c->db_user, $c->db_pass, $c->db_name);
 	$l = new LoginHandler(&$c);
-	$u = new URLHandler(&$c, &$l, &$s);
+	$u = new URLHandler(&$c, &$l, &$s, &$d);
 	$s = new SubjectHandler(&$c, &$l);
+	
 	
 	# cookielogin (endelig, usynlig BOM character ødela...)
 	# husk sed -i '1 s/^\xef\xbb\xbf//' *.txt og tail -c +4 filmedBOM > filutenBOM
@@ -98,7 +100,9 @@ if (!isset($_GET['setup'])){
 		<!-- Øivind Hoel 2011 -->
 		<link href="css3.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="diverse/jQuery.js"></script>   
-		<script type="text/javascript" src="diverse/linktool.js"></script>                 
+		<script type="text/javascript" src="diverse/linktool.js"></script>
+		<script type="text/javascript" src="diverse/easing.js"></script>                 
+		                 
 	</head>
 
 	<body>
@@ -129,6 +133,22 @@ if (!isset($_GET['setup'])){
 					<li><a href="?action=newsubject">nytt fag</a></li>
 					<li><a href="?action=newblog">ny blogg</a></li>
 					<li><a href="?action=editblog">rediger blogg</a></li>
+					<?php
+					/* TODO: fiks (css, markup) eller fjern
+					if ($l->getUserName() != ""){
+						$subjects = $s->getUserSubjects($l->getUserName());
+						if ($subjects != false){
+							# Har fag
+							$subjectmenu = '<li style="width: 250px; display: inline-block;">Fagliste:<ul id="subject_menu">';
+							while($row = mysql_fetch_array($subjects, MYSQL_ASSOC)){
+								$subjectmenu .= '<li>' . $row['name'] . '</li>';
+							}
+							$subjectmenu .= '</ul></li>';
+							echo $subjectmenu;
+						}
+					}*/
+					?>
+					
 					<?php } ?>
 				</ul>
 			</nav>
@@ -232,9 +252,12 @@ else {
 	include('setup.php');
 }
 ?>
+<h3 class="liste_header">A header of some sort</h3>
+<div class="liste_item">Content <a href="sad">with a link</a> and stuff!</divs>
 			</article>
 			<footer id="innhold_footer">
 				<pre><?php if ($c->debug == 1) { print_r($_COOKIE); print_r($_GET); print_r($_POST); }?></pre>
+				
 			</footer>
 		</section>
 		

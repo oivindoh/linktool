@@ -207,21 +207,20 @@ HTML;
 			$delete_change_links = '';
 			$rss_link = '';
 			# Vis RSS-link om feltet ikke er tomt og bruker har valgt å vise RSS
+
 			if($result_array['rss'] != "" && $rss){
-				$rss_link = '(<a href="'. $result_array['rss'] .'">RSS</a>)';
+				$rss_link = '<li><a href="'. $result_array['rss'] .'">RSS</a></li>';
 				}
 
 			if ($this->l->getUserName() != ""){
 				# Vis linker til slett og endre om bruker er innlogget
-				$delete_change_links = '<li class="admin">(<a href="?action=deleteblog&amp;id='. $result_array['ref'] 
-				.'">Slett</a>) (<a href="?action=editblog&amp;id='. $result_array['ref'] .'">Endre</a>) '. $rss_link . '</li>';
+				$delete_change_links = '<li class="admin"><ul><li class="slett""><a href="?action=deleteblog&amp;id='. $result_array['ref'] 
+				.'">Slett</a></li><li><a href="?action=editblog&amp;id='. $result_array['ref'] .'">Endre</a></li>'. $rss_link . '</ul></li>';
 			}
 			elseif ($rss_link) {
-				$delete_change_links = '<li class="admin">' . $rss_link . '</li>';
+				$delete_change_links = '<li class="admin"><ul><li>' . $rss_link . '</li></ul></li>';
 			}
-			
-			//$delete_change_links = '<li class="admin">' . $delete_change_links . $rss_link . '</li>';
-			
+		
 			# Bruk tittel som linknavn om denne er hentet fram
 			$result_array['title'] != "" || $result_array['title'] != null
 				? $url_link_text = $result_array['title'] 
@@ -259,20 +258,28 @@ HTML;
 HTML;
 		echo $out . '</div><div id="opml-form">' . $opml_form .'</div>';
 	}
-	public function listByUser($user){
+	
+	// Returns mysql resource or false on no subjects
+	public function getUserSubjects($user){
 		$user = $this->esc($user);
 		$SQL = sprintf("SELECT * FROM subjects WHERE users_email='%s'", $user);
 		$result = $this->runSQL($SQL);
 		if (mysql_num_rows($result) < 1){
 			return false;
 		}
-		
+		return $result;
+	}
+	
+	public function listByUser($user){
+		$result = $this->getUserSubjects($user);
 		$out = '<div id="subjects_overview">';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			$out .= <<<HTML
 			<h3 class="liste_header">$row[name]</h3>
 			<div class="liste_item">
 				<ul>
+					<li class="admin">hello there</li>
+					
 					<li title="Fagkode">$row[code]</li>
 					<li title="Semester">$row[term]</li>
 					<li title="Unik link"><a href="?action=newblog&id=$row[unique]">studentlink</a></li>

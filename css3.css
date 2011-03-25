@@ -191,7 +191,7 @@ a:hover{
 }
 
 input, textarea{
-	border: none;
+	border: 1px solid #333;
 	padding: 3px;
 }
 textarea{
@@ -214,10 +214,6 @@ fieldset{
 	border-radius: 15px;
 	-moz-border-radius: 15px; /* for ff 3.6 */
 	display:inline;
-}
-fieldset:focus{
-	background-color: #fff;
-	color: #333;
 }
 
 fieldset>legend{
@@ -245,50 +241,70 @@ button:hover{
 }
 
 input:valid, textarea:valid{
-	border-left: 5px solid green;
+	border: 1px solid green;
 }
 input:invalid, textarea:invalid{
-	border-left: 5px solid red;
+	border: 1px dotted red;
 }
 
+#subjects_overview li{
+	display: inline;
+	margin-right: 20px;
+	padding: 3px;
+}
+#subjects_overview li:nth-child(1n+4){
+	background-color: #555;
+}
+#subjects_overview li:nth-child(1n+4):hover{
+	background-color: #333;
+	border-bottom: 2px solid #fff;
+}
+
+/* Ikke vis listetegn */
 #linklist ul, #subjects_overview ul {
 	list-style-type: none;
 }
-#linklist li {
+/* Innhold i attributlisten for en blogg legges inn mot høyre */
+#linklist>ul>li {
 	padding-left: 25px;
 }
-#linklist li:first-child{
+/* Overskrift for blogg (navn) */
+#linklist>ul>li:first-child{
 	background-color: #333;
 	border-radius: 15px;
 	padding: 5px;
+	border-bottom: 3px solid #555;
 }
 
-#linklist li.admin{
-	background-color: #222;
+/* <li class="admin"> brukes til slett/endre/rss-linker i blogglisten,
+ 	og vises bare når musen ligger over hovedlisten (<ul>) for denne bloggen */
+li.admin{
+	background-color: #444;
 	margin: 0 20% 0 20%;
 	border-radius: 0 0 10px 10px;
 	text-align: center;
 	padding: 3px;
-
 }
-#subjects_overview a {
-	border-radius: 10px;
+li.admin>li{
+	margin: 0;
+	padding: 0;
+}
+li.admin>ul{
+	margin: 0;
+	padding: 0;
+}
+li.admin>ul>li{
+	display: inline;
+	margin: 0 25px 0 25px;
 	padding: 5px;
+}
+li.admin>ul>li:hover{
 	background-color: #333;
+	border-bottom: 2px solid #fff;
+	border-top: 5px solid #333;
 }
 
-#subjects_overview li{
-	display: inline-block;
-	min-width: 12%;
-}
+li.admin>ul>li.slett:hover{
+	border-bottom: 5px solid red;
 
-.delete{
-	text-align: center;
-}
-
-#subjects_overview>div:nth-of-type(even){
-	background: #555;
-}
-#subjects_overview>ul li:nth-child(6){
-	background: #000;
 }

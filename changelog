@@ -2,6 +2,7 @@
 	Rydding i CSS
 	Valg av semester endelig på plass
 	Bedre logikk og rettledning i hjelpetekst for ny blogg
+	Første steg mot bruk av mysqli i url.php med runSQL2()
 
 23. Mars
 	Introduserte jQuery
