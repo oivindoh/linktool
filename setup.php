@@ -1,20 +1,29 @@
 <script type="text/javascript">
 $('#innhold').hide();
-$('#innhold').fadeIn('600');
+$('#innhold').fadeIn();
+$('#header').hide();
+$('#header').slideDown('1000');
 </script>
 <?php
+	# Hvis konfigurasjonsfil finnes, vil administratorpassord være lagret
+	# dette kan isåfall brukes til å opprette filen pånytt
 	if(file_exists('conf.php')){
 		include('conf.php');
 		$c = new Config();
 		if(!$_POST['masterpass']){
 			$passform = <<<HTML
+		<div id="setup">
 			<form method="post" action="?setup=1">
 				<h1>Allerede konfigurert</h1>
 				<p>Har du gyldig administratorpassord, kan du overskrive innstillingene:</p>
-				<legend><input type="password" name="masterpass" /> Passord</legend>
+				<legend>
+					<input type="password" name="masterpass" />
+					 Passord
+				</legend>
 				<input type="hidden" name="setup" value="0" /><br />
 				<button type="submit">Videre</button>
 			</form>
+		</div>
 HTML;
 			echo $passform;
 		}
@@ -24,7 +33,7 @@ HTML;
 		if($_POST['masterpass'] != ""){
 			if (md5($_POST['masterpass'] . $c->salt) != $c->masterpass){
 				# skriv lockfelt til config, kanskje?
-				# send mail?
+				# send mail? TODO
 				die("Feil passord.");
 			}
 		}
@@ -66,14 +75,14 @@ PHP;
 			$config = str_replace("___DEBUG___", $debug, $config);
 			$config = str_replace("___MASTER___", $masterpass, $config);
 			
-			#echo $config;
+			# Skriv konfigurasjon til fil
 			$writeconfig = file_put_contents('conf.php', $config);
 			
 			# Opprett database om dette er valgt. Tar ibruk sql.sql-filen som blir distribuert sammen med verktøyet
 			# denne filen er igjen opprettet ved hjelp av mysqlworkbench pour le mac
 			if($_POST['createdb'] == 1){
 				$distributed_sql_file = file_get_contents('sql.sql');
-				# den originale modellen har med databasenavn oivindoh--
+				# den originale modellen har med databasenavn oivindoh -- bytt ut
 				$sql_file = str_replace('oivindoh', $_POST['db_name'], $distributed_sql_file);
 				# filen er bare en samling spørringer delt opp av ;
 				# sett hver spørring inn i en array siden mysq_query() bare utfører én i slengen
@@ -111,28 +120,51 @@ PHP;
 		$md5time = substr(md5(time()), -10);
 		if(isset($_POST['masterpass'])){ $followthrough = '<input type="hidden" name="masterpass" value="' . $_POST['masterpass'] . '" />'; }
 		$setup_form = <<<HTML
+		<div id="setup">
 		<h1>Oppsett av linktool</h1>
 		<p>Dette verktøyet gjør bruk av en mysql-database, og du må derfor oppgi den informasjonen verktøyet trenger for å kjøre
 			sin kode.</p><p>Data du skriver inn her vil lagres i filen conf.php, og all informasjon unntatt administratorpassord til selve 
 			verktøyet vil lagres ukryptert. Det anbefaler at du sørger for at denne filen ikke er lesbar for andre brukere.</p>
 			<form method="post" action="?setup=1">
-				<fieldset><legend>Databaseoppsett</legend>
+				<fieldset>
+					<legend>Databaseoppsett</legend>
 					<input type="hidden" name="setup" value="1" />
 					$followthrough
-					<label><input type="text" name="db_host" placeholder="db.stud.aitel.hist.no" value="$hoform" required /> Server</label><br />
-					<label><input type="text" name="db_user" placeholder="root" value="$usform" required /> Brukernavn</label><br />
-					<label><input type="text" name="db_pass" placeholder="passord" value="$paform" required /> Passord</label><br />
-					<label><input type="text" name="db_name" placeholder="linktool" value="$dbform" required /> Databasenavn</label><br />
+					<label>
+						<input type="text" name="db_host" placeholder="db.stud.aitel.hist.no" value="$hoform" required />
+						 Server
+					</label><br />
+					<label>
+						<input type="text" name="db_user" placeholder="root" value="$usform" required />
+						 Brukernavn
+					</label><br />
+					<label><input type="text" name="db_pass" placeholder="passord" value="$paform" required />
+						 Passord
+					</label><br />
+					<label><input type="text" name="db_name" placeholder="linktool" value="$dbform" required />
+						 Databasenavn
+					</label><br />
 				</fieldset>
-				<fieldset><legend>Andre innstillinger</legend>
-					<label><input type="text" name="adminpass" value="$md5time"/> Administratorpassord for å overskrive konfigurasjon</label><br />
-					<label><input type="checkbox" name="debug" value="1" $deform /> Feilsøkingsmodus</label><br />
-					<label><input type="checkbox" name="createdb" value="1" /> Opprett database <small>(overskriver eventuell eksisterende database ved samme navn)</small></label><br />
+				<fieldset>
+					<legend>Andre innstillinger</legend>
+					<label>
+						<input type="text" name="adminpass" value="$md5time"/>
+						 Administratorpassord (<small>til bruk for å overskrive konfigurasjon</small>)
+					</label><br />
+					<label>
+						<input type="checkbox" name="debug" value="1" $deform />
+						 Feilsøkingsmodus
+					</label><br />
+					<label>
+						<input type="checkbox" name="createdb" value="1" checked />
+						 Opprett database <small>(overskriver eventuell eksisterende database ved samme navn)</small>
+					</label><br />
 				</fieldset>
 				<fieldset>
 					<button type="submit">Lagre</button>
 				</fieldset>
 			</form>
+		</div>
 HTML;
 		echo $setup_form;
 		break;

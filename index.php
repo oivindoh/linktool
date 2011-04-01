@@ -252,12 +252,9 @@ else {
 	include('setup.php');
 }
 ?>
-<h3 class="liste_header">A header of some sort</h3>
-<div class="liste_item">Content <a href="sad">with a link</a> and stuff!</divs>
 			</article>
 			<footer id="innhold_footer">
 				<pre><?php if ($c->debug == 1) { print_r($_COOKIE); print_r($_GET); print_r($_POST); }?></pre>
-				
 			</footer>
 		</section>
 		

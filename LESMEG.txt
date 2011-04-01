@@ -45,6 +45,10 @@ FUNKSJONALITET:
 	
 TODO:
 
+	HUSK: distribuer uten conf.php
+	
+	Feltbredde i databasen må opp der data kjøres gjennom htmlentities()
+
 	Make DB return functions more general. Return arrays, not html :<
 
 	Bytt til mysqli?

@@ -264,6 +264,10 @@ input:invalid, textarea:invalid{
 #linklist ul, #subjects_overview ul {
 	list-style-type: none;
 }
+
+#linklist>ul{
+	overflow: auto;
+}
 /* Innhold i attributlisten for en blogg legges inn mot høyre */
 #linklist>ul>li {
 	padding-left: 25px;
@@ -296,7 +300,7 @@ li.admin>ul{
 li.admin>ul>li{
 	display: inline;
 	margin: 0 25px 0 25px;
-	padding: 5px;
+	padding: 5px 25px 5px 25px;
 }
 li.admin>ul>li:hover{
 	background-color: #333;
@@ -307,4 +311,14 @@ li.admin>ul>li:hover{
 li.admin>ul>li.slett:hover{
 	border-bottom: 5px solid red;
 
+}
+
+li.description{
+	padding: 10px;
+	border: 1px solid #555;
+	background-color: #777;
+	width: 20%;
+	height: auto;
+	float: right;
+	margin: 5px 30px 5px 30px;
 }

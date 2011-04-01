@@ -10,3 +10,4 @@ cp -R * /Users/howl/www/prosjekt/
 # backup opprettet
 # sender ny versjon til gremlin
 scp -r * oivindoh@gremlin.stud.aitel.hist.no:/home/stud/oivindoh/public_html/prosjekt/
+scp -r * somato@server9.subsys.no:/home/users/somato/www/dev/linktool/

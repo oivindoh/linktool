@@ -1,3 +1,5 @@
+30. Mars
+	Gjør conf.php ulesbar for andre brukere etter lagring av konfigurasjon (setup.php)
 24. Mars
 	Rydding i CSS
 	Valg av semester endelig på plass

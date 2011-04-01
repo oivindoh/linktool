@@ -126,6 +126,8 @@ HTML;
 		if($result){
 			$result = mysql_fetch_assoc($result);
 			$html = <<<HTML
+
+<!-- output block -->
 			<h1>Bekreft sletting av $result[name]</h1>
 			<p>Det er <strong>ikke</strong> mulig å angre dette valget, og samtlige blogger 
 				tilknyttet faget vil også bli fjernet fra systemet</p>
@@ -135,6 +137,7 @@ HTML;
 				<input type="hidden" name="confirm" value="1" />
 				<button type="submit">Bekreft</button>
 			</form>
+<!-- /output block-->
 HTML;
 		return $html;
 		}
@@ -163,18 +166,35 @@ HTML;
 		
 		# Sett opp skjema for valg av felt
 		$form_selection = <<<HTML
-		<form method="get"><fieldset><legend>Visningsvalg</legend>
-			<input type="hidden" name="id" value="$id" />
-			<input type="hidden" name="action" value="listblogs" />
-			<label><input type="checkbox" name="show[]" value="url" $url /> url &nbsp;</label> 
-			<label><input type="checkbox" name="show[]" value="rss" $rss /> rss &nbsp;</label> 
-			<label><input type="checkbox" name="show[]" value="author" $author /> forfatter &nbsp;</label> 
-			<label><input type="checkbox" name="show[]" value="description" $description /> beskrivelse &nbsp;</label> 
-			<label><input type="checkbox" name="show[]" value="frequency" $frequency /> oppdateringer &nbsp;</label>
-			<label><input type="checkbox" name="show[]" value="clicks" $clicks /> klikk &nbsp;</label>
-			<button type="submit">Vis</button>
-			</fieldset>
-		</form>
+
+<!-- output block -->
+<form method="get">
+	<fieldset>
+		<legend>Visningsvalg</legend>
+		<input type="hidden" name="id" value="$id" />
+		<input type="hidden" name="action" value="listblogs" />
+		<label>
+			<input type="checkbox" name="show[]" value="url" $url />
+			 url &nbsp;</label> 
+		<label>
+			<input type="checkbox" name="show[]" value="rss" $rss />
+			 rss &nbsp;</label> 
+		<label>
+			<input type="checkbox" name="show[]" value="author" $author />
+			 forfatter &nbsp;</label> 
+		<label>
+			<input type="checkbox" name="show[]" value="description" $description />
+			 beskrivelse &nbsp;</label> 
+		<label>
+			<input type="checkbox" name="show[]" value="frequency" $frequency />
+			 oppdateringer &nbsp;</label>
+		<label>
+			<input type="checkbox" name="show[]" value="clicks" $clicks />
+			 klikk &nbsp;</label>
+		<button type="submit">Vis</button>
+	</fieldset>
+</form>
+<!-- /output block -->
 HTML;
 		# Inner Join Is The Enemy
 		$SQL = sprintf("SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
@@ -232,8 +252,8 @@ HTML;
 					<h3><a href="go.php?to='. $result_array['url'] . '">'. $url_link_text 
 					.'</a></h3></li>'. $delete_change_links;
 			
-			$description ? $out .= '<li><blockquote>' . $result_array['description'] . '</blockquote></li>' : $out = $out;
-			$url ? $out .= '<li>URL: ' . $result_array['url'] . '</li>' : $out = $out;
+			$description ? $out .= '<li class="description"><blockquote>' . $result_array['description'] . '</blockquote></li>' : $out = $out;
+			$url ? $out .= '<li>' . $result_array['url'] . '</li>' : $out = $out;
 			$author ? $out .= '<li>Forfatter: ' . $result_array['author'] . '</li>' : $out = $out;
 			
 			switch($result_array['frequency']){
@@ -278,6 +298,7 @@ HTML;
 			<h3 class="liste_header">$row[name]</h3>
 			<div class="liste_item">
 				<ul>
+					<!-- admin, rss -->
 					<li class="admin">hello there</li>
 					
 					<li title="Fagkode">$row[code]</li>
