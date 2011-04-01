@@ -152,8 +152,7 @@ if (!isset($_GET['setup'])){
 					<?php } ?>
 				</ul>
 			</nav>
-		</header>
-		
+		</header>		
 		<section id="innhold">
 			<header id="innhold_header">
 					
