@@ -1,9 +1,10 @@
 URL: http://stud.aitel.hist.no/~oivindoh/prosjekt/
 111% anonym!
 
-	(for "cat /etc/passwd | grep oivindoh" oppgir ikke navnet mitt i det hele tatt :-)
+	(for "cat /etc/passwd | grep oivindoh" oppgir ikke navn i det hele tatt :-)
 	
-	
+	Krav ved installasjon: 
+		Mappen systemet ligger i må være skrivbar for opprettelse av conf.php
 
 FUNKSJONALITET:
 	HTML5/CSS3-in-spirit. Null javaoppgulp. Null flashfjas.
@@ -60,7 +61,7 @@ TODO:
 		
 	AJAX. AJAX. (innlogging i første omgang)
 	
-	Lær mer om bruk av jQuery
+	Lær mer om (mer nyttig) bruk av jQuery
 	
 	Lærer oppdaterer passord/navn/epost
 		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
@@ -70,47 +71,15 @@ TODO:
 	Gjøre om XML-funksjonaliteten:
 		gi ompl.php fagID via GET, og listen skal skrives ut.
 		
-	Fiks håndtering av duplicate-url
-		Godta samme url om fagID er ulik
-		Har det noe å si o
+	WOF: Fiks håndtering av duplicate-url
+	     Godta samme url om fagID er ulik
+		
 		
 	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
 	
 	Mindre tomme sider. Møter bruker en tom liste skal det henvises til muligheter til å legge til innhold
 		
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	SANITISE DATA FETCHED FROM DATABASE BEFORE OUTPUTTING
-	
-	
-	
-	
-	
-	Alle funksjoner skal ha følgende kommentar før
-#
-# 	login(): Innlogging, verifisering av bruker
-#		parameter: username, password
-#		return: 1 (logged in) | 2 (wrong passord) | 0 (user not found)
-#
-
-
+	Mer kontroll av output fra db.
 ====
 
 	Etter brukertester:
@@ -118,3 +87,55 @@ TODO:
 	Meny:
 		Uten innlogging: ikke vis linker?
 		Etter innlogging: ikke vis legg til/rediger blogg om bruker ikke har fag
+		
+		
+SJEKKLISTE for innlevering:
+
+Del 1
+[v] Innloggingsløsning
+[v] Brukernavn er epostadresse
+[v] Passord kan velges selv
+[ ] Passord kan endres
+[v] Administrerer egne fag, kan opprette nytt fag, kun fagnavn er obligatorisk
+[v] Faget får unik lenke
+[v] XTRA Lærer kan hente ut lenken til samtlige fag og semestre han er tilknyttet
+
+Del 2
+[v] Unik lenke leder til mulighet for registrering av blogg til faget
+[v] Studentene logger seg _ikke_ inn
+[v] Kun de som har riktig lenke kan registrere
+	- bruker hashverdi som bygger på faginformasjon og en salt-verdi som genereres 
+	  ved installasjon/kan endres manuelt i conf.php (sistnevnte vil invalidere samtlige
+	  eksisterende innslag i databasen, og er dermed ikke å anbefale)
+[v] Navn, bloggens adresse, RSSlenke, kort beskrivelse og estimert oppdateringsfrekvens lagres
+[v] XTRA Blogg kan ikke registreres flere ganger
+[v] XTRA Studenter kan endre informasjon om sin blogg ved å gå til unik URL generert ved registrering,
+    - basert på samme type hash som faglenke
+
+Del 3
+[v] Læreren kan administrere blogger tilknyttet et fag, og studenter kan fra samme side
+    få oversikt over alle blogger tilknyttet et fag.
+[v] Siden nevnt i forrige punkt (1) inneholder kontroller for å vise/skjule alle typer 
+	informasjon om lenkene. Dette gjøres via GET, og er derfor også mulig å gi bort 
+	forhåndsinnstilt i form av en lenke.
+[v] OPML-eksportering er tilgjengelig fra side nevnt i punkt 1/2. Denne er validerbar 
+	og serves som text/xml.
+[v] XTRA Lenker valideres under innleggingsprosessen, og er denne teoretisk gyldig, vil
+	tittel på blogg hentes nettopp fra lenken som oppgis. Validering skjer både client og
+	serverside.
+[v] XTRA Læreren kan endre registrert informasjon i både fag og blogger manuelt uten problem.
+[v] XTRA Hver utgående lenke ut for bloggene er tilknyttet hitcounter, og var lekende lett
+	å sette opp.
+
+Generelt
+[v] Websidene er validert HTML5/CSS3 (veil.), og testet i alle moderne nettlesere.
+	Nå vil vel noen semantikk***** våge å påstå at IE9 er en moderne browser, men 
+	til vil jeg rett og slett si at dette er en browser jeg ikke gidder kaste vekk 
+	tid på å sjekke i. Selvfølgelig hadde dette blitt gjort i en produksjonssetting, 
+	men i et prosjekt går jeg for ren, validert kode og ikke annet.
+[v] Feilsjekking er på plass der dette anses som relevant, og injiseringsproblematikk
+	er tatt hånd om etter beste evne.
+[v] Kreativitet utenfor oppgaveteksten er iverksatt.
+
+
+KOMMENTARER:

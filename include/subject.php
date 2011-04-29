@@ -306,7 +306,7 @@ HTML;
 					
 					<li title="Fagkode">$row[code]</li>
 					<li title="Semester">$row[term]</li>
-					<li title="Unik link"><a href="?action=newblog&id=$row[unique]">studentlink</a></li>
+					<li title="Unik link"><a href="?action=newblog&id=$row[unique]">ny blogg/studentlink</a></li>
 					<li title="Liste over tilknyttede blogger"><a href="?action=listblogs&id=$row[unique]">vis/rediger blogger</a></li>
 					<li class="delete" title="Slett"><a href="?action=deletesubject&id=$row[unique]">slett</a></li>
 				</ul>

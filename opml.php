@@ -29,6 +29,23 @@
 	</body>
 </opml>
 OPML;
+
+			$opml = <<<OPML
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.1">
+	<head>
+		<title>Linkliste for ___SUBJECTNAME___</title>
+		<dateCreated>___TIME___</dateCreated>
+	</head>
+	<body>
+		<outline text="Blogger">
+			<outline text="___SUBJECTNAME___">
+				___LINKLIST___
+			</outline>
+		</outline>
+	</body>
+</opml>
+OPML;
 			# Samme som i subject.php
 			$SQL = sprintf("SELECT DISTINCT name, ref, url, rss, author, description, frequency, clicks, title FROM $db.links
 			INNER JOIN $db.subjectlinks ON
@@ -46,10 +63,8 @@ OPML;
 			# Opprett OMPL-skjema
 			$ompl_list = "";
 			while($result_array = mysql_fetch_assoc($result)){
-				$opml_list .= '<outline text="' . html_entity_decode($result_array['title'], ENT_COMPAT, "UTF-8") . '" type="link" url="' . $result_array['url'] . '" />' . "\n\t\t\t\t";
+				$opml_list .= '<outline text="' . html_entity_decode($result_array['title'], ENT_COMPAT, "UTF-8") . '" type="rss" htmlUrl="' . $result_array['url'] . '" xmlUrl="' . $result_array['rss'] . '"/>' . "\n\t\t\t\t";
 			}
-			
-		#	$opml = str_replace("___TIME___", date("D, d M Y H:i:s T"), $opml);
 			$opml = str_replace("___TIME___", date("r"), $opml);
 			$opml = str_replace("___SUBJECTNAME___", $first_row['name'], $opml);
 			$opml = str_replace("___LINKLIST___", $opml_list, $opml);
