@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>LESMEG.txt</string>
+	<string>diverse/linktool.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,14 +26,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>28</integer>
+				<integer>48</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>22</integer>
+			<integer>29</integer>
 		</dict>
 		<key>changelog</key>
 		<dict>
@@ -49,49 +49,19 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>conf.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>css3.css</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>182</integer>
+				<integer>85</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>165</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>182</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>183</integer>
-			</dict>
+			<integer>77</integer>
 		</dict>
 		<key>diverse/easing.js</key>
 		<dict>
@@ -105,7 +75,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>83</integer>
+			<integer>44</integer>
 		</dict>
 		<key>diverse/jQuery.js</key>
 		<dict>
@@ -142,14 +112,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>16</integer>
 				<key>line</key>
-				<integer>34</integer>
+				<integer>7</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>5</integer>
+			<integer>0</integer>
 		</dict>
 		<key>go.php</key>
 		<dict>
@@ -186,14 +156,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>10</integer>
 				<key>line</key>
-				<integer>43</integer>
+				<integer>92</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>30</integer>
+			<integer>67</integer>
 		</dict>
 		<key>include/subject.php</key>
 		<dict>
@@ -207,7 +177,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>111</integer>
+			<integer>306</integer>
 		</dict>
 		<key>include/url.php</key>
 		<dict>
@@ -223,36 +193,6 @@
 			<key>firstVisibleLine</key>
 			<integer>97</integer>
 		</dict>
-		<key>index.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>97</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>85</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>94</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>97</integer>
-			</dict>
-		</dict>
 		<key>opml.php</key>
 		<dict>
 			<key>caret</key>
@@ -265,21 +205,21 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>18</integer>
+			<integer>52</integer>
 		</dict>
 		<key>setup.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>48</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>151</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>76</integer>
+			<integer>0</integer>
 		</dict>
 		<key>sql.sql</key>
 		<dict>
@@ -298,10 +238,8 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>index.php</string>
 		<string>diverse/linktool.js</string>
 		<string>diverse/easing.js</string>
-		<string>diverse/jQuery.js</string>
 		<string>include/login.php</string>
 		<string>LESMEG.txt</string>
 		<string>changelog</string>
@@ -310,7 +248,6 @@
 		<string>include/url.php</string>
 		<string>setup.php</string>
 		<string>sql.sql</string>
-		<string>conf.php</string>
 		<string>opml.php</string>
 		<string>css3.css</string>
 	</array>

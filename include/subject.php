@@ -292,6 +292,9 @@ HTML;
 	
 	public function listByUser($user){
 		$result = $this->getUserSubjects($user);
+		if(!$result){
+			return false;
+		}
 		$out = '<div id="subjects_overview">';
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			$out .= <<<HTML

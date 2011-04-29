@@ -14,4 +14,8 @@
 	Ryddet opp litt i URL-lengde
 	Endringer i datamodell
 	
-	
+
+29. April
+	Fikset error i subjects.php som hindret feilmelding i å vise og heller viste php-feil
+	Fikset OMPL date
+	Fikset OPML served som xml

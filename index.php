@@ -43,6 +43,7 @@ if (!isset($_GET['setup'])){
 		# Logg ut
 		case "logout":
 			$logout_status = $l->logout();
+			$message = ($logout_status == 1) ? "Utlogget" : "Ikke utlogget likevel zomg!";
 			break;
 		# Legge til nytt fag
 		case "addsubject":
