@@ -49,7 +49,8 @@ OPML;
 				$opml_list .= '<outline text="' . html_entity_decode($result_array['title'], ENT_COMPAT, "UTF-8") . '" type="link" url="' . $result_array['url'] . '" />' . "\n\t\t\t\t";
 			}
 			
-			$opml = str_replace("___TIME___", date("D, d M Y H:i:s T"), $opml);
+		#	$opml = str_replace("___TIME___", date("D, d M Y H:i:s T"), $opml);
+			$opml = str_replace("___TIME___", date("r"), $opml);
 			$opml = str_replace("___SUBJECTNAME___", $first_row['name'], $opml);
 			$opml = str_replace("___LINKLIST___", $opml_list, $opml);
 			echo $opml;
