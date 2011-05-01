@@ -99,7 +99,26 @@ PHP;
 				# lukk tilkoblingen
 				mysql_close();
 			}
-			
+			# Fyll database om dette er valgt. Tar ibruk dump.sql-filen som blir distribuert sammen med verktøyet
+			if($_POST['insertdb'] == 1){
+				$sql_file = file_get_contents('dump.sql');
+				# filen er bare en samling spørringer delt opp av ;
+				# sett hver spørring inn i en array siden mysq_query() bare utfører én i slengen
+				$sql_array = explode(';', $sql_file);
+				mysql_connect($_POST['db_host'], $_POST['db_user'],$_POST['db_pass']);
+				mysql_select_db($_POST['db_name']);
+				$results = '';
+				$i = 0;
+				# utfør alle spørringene
+				foreach($sql_array as $query){
+					$result .= $i . ': ' . mysql_query($query);
+					$i++;
+					
+				}
+				# lukk tilkoblingen
+				mysql_close();
+			}
+			insertdb
 			
 			echo '<h1>Innstillinger lagret</h1><p>Du kan nå <a href="index.php">ta systemet i bruk</a></p>';
 		break;
@@ -158,6 +177,10 @@ PHP;
 					<label>
 						<input type="checkbox" name="createdb" value="1" checked />
 						 Opprett database <small>(overskriver eventuell eksisterende database ved samme navn)</small>
+					</label><br />
+					<label>
+						<input type="checkbox" name="insertdb" value="1" checked />
+						 Fyll database med standardinnhold
 					</label><br />
 				</fieldset>
 				<fieldset>

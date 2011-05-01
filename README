@@ -5,6 +5,12 @@ URL: http://stud.aitel.hist.no/~oivindoh/prosjekt/
 	
 	Krav ved installasjon: 
 		Mappen systemet ligger i må være skrivbar for opprettelse av conf.php
+		
+	!*! Bruker vedlagt i databasedump = bruker1@hist.no - passord = passord.
+	!*! Blogger ferdig innlagt i faget "PHP - Hvordan stille seg åpen for SQL-injection?".
+	!*! SALT-verdien i conf.php er statisk for å gjøre det mulig å opprette + importere dump.
+		Denne bør selvfølgelig enten baseres på valgt passord eller genereres tilfeldig
+		ved virkelig installasjon.
 
 FUNKSJONALITET:
 	HTML5/CSS3-in-spirit. Null javaoppgulp. Null flashfjas.
