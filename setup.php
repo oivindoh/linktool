@@ -105,8 +105,8 @@ PHP;
 				# filen er bare en samling spørringer delt opp av ;
 				# sett hver spørring inn i en array siden mysq_query() bare utfører én i slengen
 				$sql_array = explode(';', $sql_file);
-				mysql_connect($_POST['db_host'], $_POST['db_user'],$_POST['db_pass']);
-				mysql_select_db($_POST['db_name']);
+				$link = mysql_connect($_POST['db_host'], $_POST['db_user'],$_POST['db_pass']);
+				mysql_select_db($_POST['db_name'], $link);
 				$results = '';
 				$i = 0;
 				# utfør alle spørringene
