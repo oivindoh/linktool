@@ -117,9 +117,7 @@ PHP;
 				}
 				# lukk tilkoblingen
 				mysql_close();
-			}
-			insertdb
-			
+			}			
 			echo '<h1>Innstillinger lagret</h1><p>Du kan nå <a href="index.php">ta systemet i bruk</a></p>';
 		break;
 		default:
