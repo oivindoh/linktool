@@ -29,8 +29,9 @@ class LoginHandler {
 	#		parameter: username, password
 	#		return: 1 (logged in) | 2 (wrong passord) | 0 (user not found)
 	#
-	public function login($u, $p){
+	public function login($u, $p, $change = false){
 		$u = $this->esc(trim($u));
+		$p = $this->esc(trim($p));
 		
 		# passord fra cookie er 32 lang (md5)
 		if (strlen($p) != 32){
@@ -52,13 +53,14 @@ class LoginHandler {
 				# Passord stemmer overens med det som er lagret,
 				# sett infofelt
 				$this->setPassHash($result['password']);
-				$this->setUserName($result['email']);
+			#	$this->setUserName($result['email']);
+				$this->setUserName($u);
 				$this->name = $result['name'];
 				
 				# sett cookie, gyldig en time
 				if ($cookie != 1){
 					setcookie("userName", $this->username, time()+604800);
-					setcookie("passHash", $p_cookie, time()+604800);	
+					setcookie("passHash", $p_cookie, time()+604800);
 					}							
 				return 1;
 			}
@@ -79,15 +81,15 @@ class LoginHandler {
 	#
 	public function logout(){
 		# slett cookie ved å tømme innhold og sette expiry tilbake i tid
-		setcookie("userName", false, time()-3600);
-		setcookie("passHash", false, time()-3600);
+		setcookie("userName", "", 1);
+		setcookie("passHash", "", 1);
 		
 		# tøm variabler, inkludert cookie slik at endringer trer ikraft umiddelbart
 		$this->username = "";
 		$this->passhash = "";
 		$this->name = "";
 		
-		$_COOKIE['username'] = "";
+		$_COOKIE['userName'] = "";
 		$_COOKIE['passHash'] = "";
 		
 		return 1;
@@ -159,19 +161,58 @@ HTML;
 		return $registerform;
 	}
 	
-	public function updateAccount($user, $pass1 = false, $pass2 = false, $name){
+	public function updateAccount($user, $name, $chgpass, $pass1 = false, $pass2 = false){
+		if(!$chgpass || $this->cryptPass($chgpass) != $this->getPassHash()){ return 66; }
+		
+		$user = $this->esc($user);
+		$name = $this->esc($name);
+		if ($pass1){
+			$pass1 = $this->esc($pass1);
+		}
+		if ($pass2){
+			$pass2 = $this->esc($pass2);
+		}
+		
+		# hent nåværende bruker
+		$curuser = $this->getUserName();
 		if ($pass1 && $pass2){
 			# Passord skal endres
 			if ($pass1 === $pass2){
-				return "likt";
+				echo "passordene: $pass1 \n $pass2";
+				# passord stemmer overens
+				# krypter passord
+				$pass1 = $this->cryptPass($pass1);
+				$SQL = sprintf("UPDATE users SET email='%s', password='%s', name='%s' WHERE email='$curuser'", $user, $pass1, $name);
+				$result = $this->runSQL($SQL);
+
+				if ($result){
+					# logg inn på nytt
+						$gone = $this->logout();
+					#$this->login($user, $pass2);
+					return 2;
+				}
 			}
 			else {
 				# ulikt passord, men to passord registrert
-				return 2; 
+				return 0; 
 			}
 		}
+		elseif($pass1){
+			return 0;
+		}
+		# passord skal ikke endres
 		
-		return "amagad";
+		$SQL = sprintf("UPDATE users SET email='%s', password='%s', name='%s' WHERE email='$curuser'", $user, $this->getPassHash(), $name);
+		echo "$SQL\n";
+		$result = $this->runSQL($SQL);
+		if ($result){
+			if ($curuser != $user){
+				$this->logout();
+			}
+			return 1;
+			}
+
+		return 99;
 	}
 	
 	
@@ -182,19 +223,26 @@ HTML;
 	#
 	public function showInfo($more = false){
 		if($more){
+			$lname = $this->getUserFullName();
+			$user = $this->getUserName();
 			$info = <<<HTML
 			<div id="form_description">
-			<h1>Kontoinnstillinger (NYI)</h1><p>Endre informasjon</p>
+			<h1>Kontoinnstillinger (Meh.)</h1><p>Endre informasjon</p>
 			</div>
 			<form method="post" action="?">
 				<fieldset><legend>Personalia</legend>
 					<input type="hidden" name="faction" value="accountupdate"/>
-					<label><input type="email" class="short" name="email" value="" required /> Epost</label><br />
-					<label><input type="text" class="short" name="name" /> Navn</label>
-					<details><summary>Endre passord</summary>
-					<label><input type="password" class="short" name="pass1" value="" /> Passord</label>
-					<label><input type="password" class="short" name="pass2" value="" /> Gjenta passord</label>
-					</details>
+					<label><input type="email" class="short" name="email" value="$user" required /> Epost</label><br />
+					<label><input type="text" class="short" name="name" value="$lname" /> Navn</label>
+				</fieldset>
+				<fieldset><legend>Passord</legend>
+					<label><input type="password" class="short" name="chgpass" /> (Må oppgis)</label>
+				</fieldset>
+				<h3 class="liste_header">Endre passord</h3>
+					<div class="liste_item" style="padding: 10px 0 10px 100px">
+					<label><input type="password" class="short" name="pass1" value="" /> Nytt passord</label><br />
+					<label><input type="password" class="short" name="pass2" value="" /> Gjenta nytt passord</label>
+					</div>
 					<button type="submit">Endre</button><button type="reset">Tilbakestill</button>
 				</fieldset>
 			</form>
@@ -228,6 +276,10 @@ HTML;
 	}
 	public function getPassHash(){
 		return $this->passhash;
+	}
+	
+	public function getUserFullName(){
+		return $this->name;
 	}
 	
 	#

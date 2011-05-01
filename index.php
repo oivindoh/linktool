@@ -28,6 +28,29 @@ if (!isset($_GET['setup'])){
 	#
 	if(isset($_POST['faction'])){
 	switch($_POST['faction']){
+		case "accountupdate":
+			$accountupdate_result = $l->updateAccount($_POST['email'], $_POST['name'], $_POST['chgpass'], $_POST['pass1'], $_POST['pass2']) ;
+
+			switch($accountupdate_result){
+				case 0:
+					$message = '<h1>Oppdatering av konto</h1><p>Du ser ut til å ville endre passord, men du oppga ikke identisk passord to ganger; dette er 
+				nødvendig for å unngå å lagre passord med skrivefeil. <a href="?action=account">Prøv gjerne igjen</a>!</p>';
+					break;
+				case 1:
+					$message = '<h1>Success!</h1><p>Brukerdata endret, passord er ikke endret.</p>';
+					break;
+				case 2:
+					$message = '<h1>Endring utført</h1><p>Passord og eventuell annen brukerdata endret, og du er nå utlogget.</p>';
+					$l->logout();
+					break;
+				case 66:
+					$message = '<h1>Passord kreves oppgitt for endringer</h1>';
+					break;
+				case 99:
+					$message = '<h1>Epic breakage</h1>';
+					break;
+			}
+			break;
 		# Bruker har sendt inn data for registrering av ny bruker
 		case "register":
 			$reg_result = $l->register($_POST['username'], $_POST['password']);
@@ -60,7 +83,10 @@ if (!isset($_GET['setup'])){
 		# Legg til blogg
 		case "addblog":
 			if($_POST['manual_id']){ $_POST['id'] = $_POST['manual_id']; }
-			$addblog = $u->insertURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
+			$addblog_reply = $u->insertURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
+			$addblog_array = explode("|", $addblog_reply);
+			$addblog = $addblog_array[0];
+			$subjref = $addblog_array[1];
 			switch($addblog){
 				case "0":
 					$message = "<h1>Feil</h1><p>Noe gikk forferdelig galt.</p>"; break;
@@ -69,25 +95,16 @@ if (!isset($_GET['setup'])){
 				case "2":
 					$message = "<h1>Feil</h1><p>Denne bloggen er allerede registrert</p>"; break;
 				case "3":
-					$message = "<h1>Feil</h1><p>Angitt fag eksisterer ikke"; break;
+					$message = "<h1>Feil</h1><p>Angitt fag eksisterer ikke</p>"; break;
 				default:
 					$message = '<h1>Blogg lagt til</h1><p>Takk for ditt bidrag!<br />Ditt referansenummer er ' . $addblog . 
-					' ( <a href="?action=editblog&id=' . $addblog . '">link</a> )</p><p>Ta vare på dette nummeret/denne linken i tilfelle du får behov for å redigere linken på et senere tidspunkt.';
+					' ( <a href="?action=editblog&id=' . $addblog . '">link</a> )</p><p>Ta vare på dette nummeret/denne linken i tilfelle du får behov for å redigere linken på et senere tidspunkt.</p><p>Ta gjerne en titt på <a href="?action=listblogs&id='. $subjref . '">andre blogger registrert på faget</a>!';
 			}
 			break;
 		# Rediger eksisterende blogg
 		case "editblog":
 			$editblog = $u->editURL($_POST['url'], $_POST['rss'], $_POST['author'], $_POST['desc'], $_POST['freq'], $_POST['id']);
 			if ($editblog == 1){ $message = "<h1>Blogg oppdatert</h1></p>Takk for bidraget!</p>"; } else { $message = "<h1>Blogg ikke oppdatert</h1><p>Dette er garantert din egen feil.</p>"; }
-			break;
-		case "accountupdate":
-			$accountupdate_result = $l->updateAccount($_POST['email'], $_POST['pass1'], $_POST['pass2'], $_POST['name']);
-
-			switch($accountupdate_result){
-				case 2:
-					$message = '<h1>Oppdatering av konto</h1><p>Du ser ut til å ville endre passord, men du oppga ikke identisk passord to ganger; dette er 
-				nødvendig for å unngå å lagre passord med skrivefeil. Prøv gjerne igjen!</p>';
-			}
 			break;
 		}
 	}

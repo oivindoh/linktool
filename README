@@ -43,6 +43,9 @@ FUNKSJONALITET:
 	
 	Sletting av fag
 		- Sletter også alle tilhørende linker
+		
+		
+	+ Mehr.
 	
 TODO:
 
@@ -50,8 +53,10 @@ TODO:
 	
 	Feltbredde i databasen må opp der data kjøres gjennom htmlentities()
 
-	Make DB return functions more general. Return arrays, not html :<
-
+	Mer generelle returverdier fra funksjoner istedenfor HTML-suppe.
+	
+	Templating
+	
 	Bytt til mysqli?
 		Krever PHP5, mysql 4.1.3/5.0.7 eller nyere
 			aitel = 5.0.51a
@@ -63,20 +68,11 @@ TODO:
 	
 	Lær mer om (mer nyttig) bruk av jQuery
 	
-	Lærer oppdaterer passord/navn/epost
-		- Husk å oppdatere fagtabellen med ny epost før lærertabellen oppdateres
-	
 	Funksjonalitet for å få resatt passord (krever mail)
-	
-	Gjøre om XML-funksjonaliteten:
-		gi ompl.php fagID via GET, og listen skal skrives ut.
-		
+			
 	WOF: Fiks håndtering av duplicate-url
 	     Godta samme url om fagID er ulik
-		
-		
-	Gi link til liste over blogger tilknyttet faget når man oppretter ny blogglink
-	
+			
 	Mindre tomme sider. Møter bruker en tom liste skal det henvises til muligheter til å legge til innhold
 		
 	Mer kontroll av output fra db.
@@ -95,7 +91,7 @@ Del 1
 [v] Innloggingsløsning
 [v] Brukernavn er epostadresse
 [v] Passord kan velges selv
-[ ] Passord kan endres
+[v] Passord kan endres
 [v] Administrerer egne fag, kan opprette nytt fag, kun fagnavn er obligatorisk
 [v] Faget får unik lenke
 [v] XTRA Lærer kan hente ut lenken til samtlige fag og semestre han er tilknyttet
@@ -139,3 +135,4 @@ Generelt
 
 
 KOMMENTARER:
+Nein.

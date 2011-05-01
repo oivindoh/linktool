@@ -75,7 +75,7 @@ class URLHandler{
 					if($result){
 						# alt ok
 						# TODO: hook for sending av mail om ønskelig?
-						return $ref;
+						return $ref .'|' . $subj;
 					}
 				}
 			}

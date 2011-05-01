@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>diverse/linktool.js</string>
+	<string>sql.sql</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,23 +26,23 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>48</integer>
+				<integer>124</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>29</integer>
+			<integer>111</integer>
 		</dict>
 		<key>changelog</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>82</integer>
+				<integer>27</integer>
 				<key>line</key>
-				<integer>1</integer>
+				<integer>20</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -170,14 +170,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>45</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>130</integer>
+				<integer>320</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>306</integer>
+			<integer>314</integer>
 		</dict>
 		<key>include/url.php</key>
 		<dict>
@@ -193,19 +193,19 @@
 			<key>firstVisibleLine</key>
 			<integer>97</integer>
 		</dict>
-		<key>opml.php</key>
+		<key>index.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>30</integer>
+				<integer>25</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>52</integer>
+			<integer>96</integer>
 		</dict>
 		<key>setup.php</key>
 		<dict>
@@ -242,18 +242,18 @@
 		<string>diverse/easing.js</string>
 		<string>include/login.php</string>
 		<string>LESMEG.txt</string>
+		<string>index.php</string>
 		<string>changelog</string>
 		<string>go.php</string>
 		<string>include/subject.php</string>
 		<string>include/url.php</string>
 		<string>setup.php</string>
 		<string>sql.sql</string>
-		<string>opml.php</string>
 		<string>css3.css</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{142, 155}, {1233, 642}}</string>
+	<string>{{125, 52}, {1229, 568}}</string>
 </dict>
 </plist>

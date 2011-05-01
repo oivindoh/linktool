@@ -38,10 +38,8 @@ OPML;
 		<dateCreated>___TIME___</dateCreated>
 	</head>
 	<body>
-		<outline text="Blogger">
-			<outline text="___SUBJECTNAME___">
-				___LINKLIST___
-			</outline>
+		<outline text="Linkliste for ___SUBJECTNAME___">
+			___LINKLIST___
 		</outline>
 	</body>
 </opml>
@@ -63,7 +61,7 @@ OPML;
 			# Opprett OMPL-skjema
 			$ompl_list = "";
 			while($result_array = mysql_fetch_assoc($result)){
-				$opml_list .= '<outline text="' . html_entity_decode($result_array['title'], ENT_COMPAT, "UTF-8") . '" type="rss" htmlUrl="' . $result_array['url'] . '" xmlUrl="' . $result_array['rss'] . '"/>' . "\n\t\t\t\t";
+				$opml_list .= '<outline text="' . html_entity_decode($result_array['title'], ENT_COMPAT, "UTF-8") . '" type="rss" htmlUrl="' . $result_array['url'] . '" xmlUrl="' . $result_array['rss'] . '"/>' . "\n\t\t\t";
 			}
 			$opml = str_replace("___TIME___", date("r"), $opml);
 			$opml = str_replace("___SUBJECTNAME___", $first_row['name'], $opml);
