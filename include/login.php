@@ -178,7 +178,6 @@ HTML;
 		if ($pass1 && $pass2){
 			# Passord skal endres
 			if ($pass1 === $pass2){
-				echo "passordene: $pass1 \n $pass2";
 				# passord stemmer overens
 				# krypter passord
 				$pass1 = $this->cryptPass($pass1);
@@ -203,7 +202,6 @@ HTML;
 		# passord skal ikke endres
 		
 		$SQL = sprintf("UPDATE users SET email='%s', password='%s', name='%s' WHERE email='$curuser'", $user, $this->getPassHash(), $name);
-		echo "$SQL\n";
 		$result = $this->runSQL($SQL);
 		if ($result){
 			if ($curuser != $user){
